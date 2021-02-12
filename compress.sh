@@ -10,11 +10,21 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     BROTLI_CMD="brotli --best --keep --stdout --"
     ZSTD_CMD="zstd -19 -k -c --"
     ZSTD_DICT_CMD="zstd -19 -k -c -D /dict/zstd --"
+
+    PNG_OPTIPNG_CMD="optipng -o5"
+    PNG_ZOPFLIPNG_CMD="zopflipng"
+    PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
+    JPG_WEBP_CMD="cwebp -m 6 -q 85"
 else
     GZIP_CMD="zopfli --i1 --gzip -c --"
-    BROTLI_CMD="brotli --fast --keep --stdout --"
+    BROTLI_CMD="brotli -0 --keep --stdout --"
     ZSTD_CMD="zstd -1 -k -c --"
     ZSTD_DICT_CMD="zstd -1 -k -c -D /dict/zstd --"
+
+    PNG_OPTIPNG_CMD="optipng -o0"
+    PNG_ZOPFLIPNG_CMD="zopflipng -q --iterations=1"
+    PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
+    JPG_WEBP_CMD="cwebp -q 85"
 fi
 
 job_limit () { NJOBS=${1:-$(nproc)}
@@ -122,7 +132,7 @@ COMPRESSIBLE_FILES=$(
 for FILE in $JPEG_FILES; do
     echo "$FILE"
 
-    cwebp -m 6 -q 85 "$FILE" -o "$FILE.webp"
+    $JPG_WEBP_CMD "$FILE" -o "$FILE.webp"
 
     QUALITY=$(identify -format '%[quality]' "$FILE")
     if (( QUALITY >= 88 )); then
@@ -139,11 +149,11 @@ done
 
 for FILE in $PNG_FILES; do
     echo "$FILE"
-    optipng -o5 "$FILE"
-    zopflipng "$FILE" "$FILE.zopflipng"
+    $PNG_OPTIPNG_CMD "$FILE"
+    $PNG_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
     [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE"
 
-    cwebp -m 6 -pre 4 -sharp_yuv -q 90 "$FILE" -o "$FILE.webp"
+    $PNG_WEBP_CMD "$FILE" -o "$FILE.webp"
     validate "$FILE" "$FILE.webp" "image/webp" true
 
     #avifenc -s 0 "$FILE" "$FILE.avif"

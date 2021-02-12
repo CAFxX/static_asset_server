@@ -1,10 +1,12 @@
 FROM static_asset_builder AS build
 WORKDIR /
-COPY webroot /webroot
-COPY cmd/server/main.go /main.go
 
-RUN ASSET_DIR=/webroot /compress.sh
-RUN CGO_ENABLED=0 go build -o /server /main.go
+COPY compress.sh /
+COPY webroot /webroot
+RUN COMPRESSION=HIGH ASSET_DIR=/webroot /compress.sh
+
+COPY cmd/server /cmd/server
+RUN (cd /cmd/server && go get && CGO_ENABLED=0 go build -o /server)
 
 
 FROM alpine AS server
@@ -14,4 +16,4 @@ COPY --from=build /dict /dict
 COPY --from=build /alt_path.json /alt_path.json
 COPY --from=build /server /server
 
-RUN /server /alt_path.json /webroot
+CMD /server /alt_path.json /webroot
