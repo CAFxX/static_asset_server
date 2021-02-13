@@ -55,7 +55,7 @@ func main() {
 					goto next // bypass negotiation
 				}
 				w.Header().Add("Vary", "Accept")
-				negotiated := negotiate(r.Header.Get("Accept"), alt.Types...)
+				negotiated := negotiateAccept(r.Header.Get("Accept"), alt.Types...)
 				path, found := alt.Paths[negotiated]
 				if !found {
 					goto next // negotiation failed
@@ -68,7 +68,7 @@ func main() {
 					goto next // bypass negotiation
 				}
 				w.Header().Add("Vary", "Accept-Encoding")
-				negotiated := negotiate(r.Header.Get("Accept-Encoding"), alt.Types...)
+				negotiated := negotiateAccept(r.Header.Get("Accept-Encoding"), alt.Types...)
 				path, found := alt.Paths[negotiated]
 				if !found {
 					goto next // negotiation failed
@@ -92,9 +92,9 @@ func main() {
 					duration := time.Since(start)
 					ce.Write(
 						zap.String("url", url),
-						zap.String("url_alt", r.URL.String()),
+						zap.String("variant", r.URL.String()),
 						zap.String("accept", accept),
-						zap.String("acceptEncoding", acceptEncoding),
+						zap.String("accept-encoding", acceptEncoding),
 						zap.Int("status", wr.status),
 						zap.String("content-type", w.Header().Get("Content-Type")),
 						zap.String("content-encoding", w.Header().Get("Content-Encoding")),
@@ -131,7 +131,7 @@ func (wr *responseRecorder) Write(b []byte) (int, error) {
 	return wr.ResponseWriter.Write(b)
 }
 
-func negotiate(header string, acceptables ...string) string {
+func negotiateAccept(header string, acceptables ...string) string {
 	h := accept.Parse(header)
 	for _, acceptable := range acceptables {
 		if h.Accepts(acceptable) {
