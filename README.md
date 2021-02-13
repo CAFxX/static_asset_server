@@ -23,7 +23,9 @@ The simplest way to use this tool is the following:
 
 If you want to speed up the asset optimization step (at the expense of the compression ratio) you can replace `docker build .` with `docker build --build-arg compression=LOW .`
 
-## TODO
+## Contributing
+
+PRs are welcome. Some ideas for what to add:
 
 - Make the baking process run in parallel
 - Finish implementation of zstd dictionary support
