@@ -8,8 +8,8 @@ The responsibility of generating the optimized static assets as well as the inde
 
 Currently the following optimizations are performed:
 
-- PNG image files are optimized with optipng/zopflipng, and alternate versions are created in webp and jpeg format (the latter only if the PNG file contains no transparent pixels)
-- JPEG image files are optimized with mozjpeg and their quality lowered to 85; alternate versions are created in webp format
+- PNG image files are optimized with optipng/zopflipng, and alternate versions are created in avif, webp and jpeg format (the latter only if the PNG file contains no transparent pixels)
+- JPEG image files are optimized with mozjpeg and their quality lowered to 85; alternate versions are created in avid and webp format
 - Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
 ## Usage
