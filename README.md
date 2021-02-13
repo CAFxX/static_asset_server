@@ -4,7 +4,7 @@ This repository contains a set of tools to generate static asset server containe
 
 The [HTTP server](cmd/server/main.go) is written in go and supports content type and content encoding negotiation. It expects static assets to be under a root directory, that contains one or more optimized variants of each asset, as well as an index file (`alt_path.json`) that lists the relationships (e.g. alternate content type or content encoding) between variants of each asset. The server always returns to the client the smallest variant that the client supports, and supports revalidation/caching using the asset modification date.
 
-The responsibility of generating the optimized static assets as well as the index file lies with the `compress.sh` script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, ...) to perform these tasks.
+The responsibility of generating the optimized static assets as well as the index file lies with the [`compress.sh`](compress.sh) script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, ...) to perform these tasks.
 
 Currently the following optimizations are performed:
 
