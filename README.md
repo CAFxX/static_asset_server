@@ -34,10 +34,12 @@ If you want to speed up the asset optimization step (at the expense of the compr
 - Add webp optimization
 - Add avif variants for jpeg/png/webp assets
 - Add heif variants for jpeg/png/webp assets
+- Add gif optimization and variants (apng, webp)
 - Add html minification
 - Add js minification
 - Add css minification
+- Add json minification
 - Write some tests
 - Optionally embed assets in the server
 - Support caching optimization results
-- Use unique (collision-free) file names for asset variants
+- Use unique (guaranteed collision-free) file names for asset variants
