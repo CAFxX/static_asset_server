@@ -156,13 +156,14 @@ for FILE in $PNG_FILES; do
     $PNG_WEBP_CMD "$FILE" -o "$FILE.webp"
     validate "$FILE" "$FILE.webp" "image/webp" true
 
-    #avifenc -s 0 "$FILE" "$FILE.avif"
-    #validate "$FILE" "$FILE.avif" "image/avif" true
-
     OPAQUE=$(identify -format '%[opaque]' "$FILE")
     if [ "$OPAQUE" == "true" ]; then
         convert "$FILE" pnm:- | cjpeg -quality 90 -optimize -progressive -sample 1x1 -outfile "$FILE.jpg"
         validate "$FILE" "$FILE.jpg" "image/jpeg" true
+
+        #avifenc -s 0 "$FILE" "$FILE.avif"
+        cavif --encoder-usage good --rate-control q --crf 20 -i "$FILE" -o "$FILE.avif"
+        validate "$FILE" "$FILE.avif" "image/avif" true
     fi
 done
 
