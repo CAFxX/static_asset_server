@@ -133,6 +133,7 @@ for FILE in $JPEG_FILES; do
     echo "$FILE"
 
     $JPG_WEBP_CMD "$FILE" -o "$FILE.webp"
+    avifenc -s 0 "$FILE" "$FILE.avif"
 
     QUALITY=$(identify -format '%[quality]' "$FILE")
     if (( QUALITY >= 88 )); then
@@ -143,6 +144,7 @@ for FILE in $JPEG_FILES; do
     fi
 
     validate "$FILE" "$FILE.webp" "image/webp" true
+    validate "$FILE" "$FILE.avif" "image/avif" true
 done
 
 ## optimize png images
@@ -156,8 +158,8 @@ for FILE in $PNG_FILES; do
     $PNG_WEBP_CMD "$FILE" -o "$FILE.webp"
     validate "$FILE" "$FILE.webp" "image/webp" true
 
-    #avifenc -s 0 "$FILE" "$FILE.avif"
-    #validate "$FILE" "$FILE.avif" "image/avif" true
+    avifenc -s 0 "$FILE" "$FILE.avif"
+    validate "$FILE" "$FILE.avif" "image/avif" true
 
     OPAQUE=$(identify -format '%[opaque]' "$FILE")
     if [ "$OPAQUE" == "true" ]; then

@@ -34,8 +34,9 @@ PRs are welcome. Some ideas for what to add:
 - Add lzma variants
 - Add svg minification
 - Add webp optimization
-- Add avif variants for jpeg/png/webp assets
-- Add heif variants for jpeg/png/webp assets
+- Add avif optimization
+- Add avif variant for webp assets
+- Add heif variants for jpeg/png/webp/avif assets
 - Add gif optimization and variants (apng, webp)
 - Add html minification
 - Add js minification
