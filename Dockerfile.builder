@@ -1,9 +1,7 @@
 # docker build --tag static_asset_builder --file Dockerfile.builder .
 
-FROM ubuntu:devel
+FROM ubuntu:rolling
 WORKDIR /
-COPY compress.sh /
-COPY alt_path.go /
 
 RUN apt-get update && \
     apt-get install -y zopfli brotli zstd optipng webp imagemagick \
@@ -21,5 +19,7 @@ RUN git clone --depth=1 https://github.com/mozilla/mozjpeg.git && \
     ln -s /opt/mozjpeg/bin/djpeg && \
     ln -s /opt/mozjpeg/bin/jpegtran
 
-RUN go get github.com/mattn/go-sqlite3 && \
-    go build -o /usr/local/bin/alt_path /alt_path.go
+COPY cmd/alt_path /cmd/alt_path
+RUN (cd /cmd/alt_path && go get && CGO_ENABLED=0 go build -o /usr/local/bin/alt_path)
+
+COPY compress.sh /

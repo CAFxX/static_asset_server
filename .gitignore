@@ -1,2 +1,3 @@
-/webroot/
+/webroot/*
 /webroot-proc/
+.DS_Store

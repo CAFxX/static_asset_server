@@ -22,7 +22,7 @@ else
     ZSTD_DICT_CMD="zstd -1 -k -c -D /dict/zstd --"
 
     PNG_OPTIPNG_CMD="optipng -o0"
-    PNG_ZOPFLIPNG_CMD="zopflipng -q --iterations=1"
+    PNG_ZOPFLIPNG_CMD="zopflipng -q"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
     JPG_WEBP_CMD="cwebp -q 85"
 fi

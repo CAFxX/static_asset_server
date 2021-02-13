@@ -1,9 +1,10 @@
 FROM static_asset_builder AS build
 WORKDIR /
+ARG compression=HIGH
 
 COPY compress.sh /
 COPY webroot /webroot
-RUN COMPRESSION=HIGH ASSET_DIR=/webroot /compress.sh
+RUN COMPRESSION=$compression ASSET_DIR=/webroot /compress.sh
 
 COPY cmd/server /cmd/server
 RUN (cd /cmd/server && go get && CGO_ENABLED=0 go build -o /server)

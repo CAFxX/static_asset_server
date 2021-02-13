@@ -3,14 +3,18 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
+	"time"
 
 	accept "github.com/timewasted/go-accept-headers"
+	"go.uber.org/zap"
 )
 
 func main() {
+	log, _ := zap.NewProductionConfig().Build()
+	log.Info("starting server")
+
 	altPath := make(map[string]struct {
 		Image    bool              `json:"image"`
 		MimeType string            `json:"mime_type"`
@@ -19,11 +23,11 @@ func main() {
 	})
 	buf, err := ioutil.ReadFile(os.Args[1])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("reading altPath", zap.Error(err))
 	}
 	err = json.Unmarshal(buf, &altPath)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("pasring altPath", zap.Error(err))
 	}
 	hidden := map[string]struct{}{}
 	for _, v := range altPath {
@@ -46,7 +50,6 @@ func main() {
 			if !ok {
 				goto next
 			}
-			log.Printf("%#v", alt)
 			if alt.Image {
 				if r.URL.Query().Get("content-type") == "original" {
 					goto next // bypass negotiation
@@ -82,14 +85,31 @@ func main() {
 
 	logger := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Print("->", " url=", r.URL.String(), " accept=", r.Header.Get("Accept"), " accept-encoding=", r.Header.Get("Accept-Encoding"))
-			wr := &responseRecorder{w, 200}
-			next.ServeHTTP(wr, r)
-			log.Print("<-", " url=", r.URL.String(), " status=", wr.status, " content-type=", w.Header().Get("Content-Type"), " content-encoding=", w.Header().Get("Content-Encoding"), " vary=", w.Header().Get("Vary"))
+			if ce := log.Check(zap.InfoLevel, "request"); ce != nil {
+				url, accept, acceptEncoding, start := r.URL.String(), r.Header.Get("Accept"), r.Header.Get("Accept-Encoding"), time.Now()
+				wr := &responseRecorder{w, 0}
+				defer func() {
+					duration := time.Since(start)
+					ce.Write(
+						zap.String("url", url),
+						zap.String("url_alt", r.URL.String()),
+						zap.String("accept", accept),
+						zap.String("acceptEncoding", acceptEncoding),
+						zap.Int("status", wr.status),
+						zap.String("content-type", w.Header().Get("Content-Type")),
+						zap.String("content-encoding", w.Header().Get("Content-Encoding")),
+						zap.String("vary", w.Header().Get("Vary")),
+						zap.Duration("duration", duration),
+					)
+				}()
+				w = wr
+			}
+			next.ServeHTTP(w, r)
 		})
 	}
 
-	log.Fatal(http.ListenAndServe(":8080", logger(negotiate(http.FileServer(http.Dir(os.Args[2]))))))
+	handler := logger(negotiate(http.FileServer(http.Dir(os.Args[2]))))
+	log.Fatal("server", zap.Error(http.ListenAndServe(":8080", handler)))
 }
 
 type responseRecorder struct {
@@ -102,6 +122,13 @@ func (wr *responseRecorder) WriteHeader(s int) {
 		wr.status = s
 	}
 	wr.ResponseWriter.WriteHeader(s)
+}
+
+func (wr *responseRecorder) Write(b []byte) (int, error) {
+	if wr.status == 0 {
+		wr.status = 200
+	}
+	return wr.ResponseWriter.Write(b)
 }
 
 func negotiate(header string, acceptables ...string) string {
