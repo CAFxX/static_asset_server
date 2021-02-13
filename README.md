@@ -18,7 +18,13 @@ The simplest way to use this tool is the following:
 
 1. Ensure you have Docker running
 2. Place the static assets in the `webroot` directory
-3. Run `docker build --tag static_asset_builder --file Dockerfile.builder . && docker build . && docker run -p 8080:8080 $(docker image ls --format '{{.ID}}' | head -1)`; please note that the second step may take quite some time depending on how many static assets are present in `webroot`
+3. Run 
+   ```bash
+   docker build --tag static_asset_builder --file Dockerfile.builder . && \
+   docker build . && \
+   docker run -p 8080:8080 $(docker image ls --format '{{.ID}}' | head -1)
+   ```
+   Please note that the second step may take quite some time depending on how many static assets are present in `webroot`
 4. The static asset server should now be running on http://localhost:8080 (if you have file `webroot/foo/bar.htm` it should be served as http://localhost:8080/foo/bar.htm)
 
 If you want to speed up the asset optimization step (at the expense of the compression ratio) you can replace `docker build .` with `docker build --build-arg compression=LOW .`
