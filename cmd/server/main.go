@@ -14,6 +14,13 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	webrootDir  = "/webroot"
+	altPathFile = "/alt_path.json"
+	certFile    = "/server.crt"
+	keyFile     = "/server.key"
+)
+
 func main() {
 	log, _ := zap.NewProductionConfig().Build()
 	log = log.Named("server")
@@ -25,13 +32,13 @@ func main() {
 		Types    []string          `json:"types"`
 		Paths    map[string]string `json:"paths"`
 	})
-	buf, err := ioutil.ReadFile(os.Args[1])
+	buf, err := ioutil.ReadFile(altPathFile)
 	if err != nil {
-		log.Fatal("reading altPath", zap.Error(err))
+		log.Fatal("reading "+altPathFile, zap.Error(err))
 	}
 	err = json.Unmarshal(buf, &altPath)
 	if err != nil {
-		log.Fatal("parsing altPath", zap.Error(err))
+		log.Fatal("parsing "+altPathFile, zap.Error(err))
 	}
 	hidden := map[string]struct{}{}
 	for _, v := range altPath {
@@ -88,7 +95,7 @@ func main() {
 	}
 
 	logger := func(next http.Handler) http.Handler {
-		log := log.Named("logger")
+		log := log.Named("accesslog")
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if ce := log.Check(zap.InfoLevel, "request"); ce != nil {
 				url, accept, acceptEncoding, start := r.URL.String(), r.Header.Get("Accept"), r.Header.Get("Accept-Encoding"), time.Now()
@@ -113,12 +120,22 @@ func main() {
 		})
 	}
 
-	fs := http.Dir(os.Args[2])
+	fs := http.Dir(webrootDir)
 	server := &http.Server{
 		Handler: logger(negotiate(http.FileServer(fs))),
 	}
 	go func() {
-		log.Error("http", zap.Error(server.ListenAndServe()))
+		_, err := os.Stat(certFile)
+		if err != nil && os.IsNotExist(err) {
+			err = server.ListenAndServe()
+		} else {
+			err = server.ListenAndServeTLS(certFile, keyFile)
+		}
+		if err == http.ErrServerClosed {
+			log.Info("closed")
+		} else {
+			log.Fatal("ListenAndServe*", zap.Error(err))
+		}
 	}()
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt, os.Kill, syscall.SIGTERM)
