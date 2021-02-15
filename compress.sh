@@ -14,7 +14,9 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_OPTIPNG_CMD="optipng -o5"
     PNG_ZOPFLIPNG_CMD="zopflipng"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
+    PNG_AVIF_CMD="avifenc -s 0"
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
+    JPG_AVIF_CMD="avifenc -s 0"
 else
     GZIP_CMD="zopfli --i1 --gzip -c --"
     BROTLI_CMD="brotli -0 --keep --stdout --"
@@ -24,7 +26,9 @@ else
     PNG_OPTIPNG_CMD="optipng -o0"
     PNG_ZOPFLIPNG_CMD="zopflipng -q"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
+    PNG_AVIF_CMD="avifenc"
     JPG_WEBP_CMD="cwebp -q 85"
+    JPG_AVIF_CMD="avifenc"
 fi
 
 job_limit () { NJOBS=${1:-$(nproc)}
@@ -133,7 +137,7 @@ for FILE in $JPEG_FILES; do
     echo "$FILE"
 
     $JPG_WEBP_CMD "$FILE" -o "$FILE.webp"
-    avifenc -s 0 "$FILE" "$FILE.avif"
+    $JPG_AVIF_CMD "$FILE" "$FILE.avif"
 
     QUALITY=$(identify -format '%[quality]' "$FILE")
     if (( QUALITY >= 88 )); then
@@ -158,7 +162,7 @@ for FILE in $PNG_FILES; do
     $PNG_WEBP_CMD "$FILE" -o "$FILE.webp"
     validate "$FILE" "$FILE.webp" "image/webp" true
 
-    avifenc -s 0 "$FILE" "$FILE.avif"
+    $PNG_AVIF_CMD "$FILE" "$FILE.avif"
     validate "$FILE" "$FILE.avif" "image/avif" true
 
     OPAQUE=$(identify -format '%[opaque]' "$FILE")
