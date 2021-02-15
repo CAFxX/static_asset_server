@@ -26,10 +26,8 @@ The simplest way to use this tool is the following:
    docker run -p 8080:80 $(docker image ls --format '{{.ID}}' | head -1)
    ```
 
-   Please note that the second step may take quite some time depending on how many static assets are present in `webroot`
-4. The static asset server should now be running on http://localhost:8080 (if you have file `webroot/foo/bar.htm` it should be served as http://localhost:8080/foo/bar.htm)
-
-If you want to speed up the asset optimization step (at the expense of the compression ratio) you can replace `docker build .` with `docker build --build-arg compression=LOW .`
+   Please note that the second step is when asset optimization is performed and may take quite some time depending on how many static assets are present in `webroot`; if you want to speed up this step (at the expense of the compression ratio) you can replace `docker build .` with `docker build --build-arg compression=LOW .`
+4. The static asset server should now be running on [localhost:8080](http://localhost:8080) (if you have file `webroot/foo/bar.htm` it should be served as [localhost:8080/foo/bar.htm](http://localhost:8080/foo/bar.htm))
 
 ## Contributing
 
