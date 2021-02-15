@@ -99,7 +99,7 @@ func main() {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if ce := log.Check(zap.InfoLevel, "request"); ce != nil {
 				url, accept, acceptEncoding, start := r.URL.String(), r.Header.Get("Accept"), r.Header.Get("Accept-Encoding"), time.Now()
-				wr := &responseRecorder{w, 0}
+				wr := &responseRecorder{ResponseWriter: w}
 				defer func() {
 					duration := time.Since(start)
 					ce.Write(
@@ -111,6 +111,7 @@ func main() {
 						zap.String("content-type", w.Header().Get("Content-Type")),
 						zap.String("content-encoding", w.Header().Get("Content-Encoding")),
 						zap.String("vary", w.Header().Get("Vary")),
+						zap.Int("length", wr.written),
 						zap.Duration("duration", duration),
 					)
 				}()
@@ -147,7 +148,8 @@ func main() {
 
 type responseRecorder struct {
 	http.ResponseWriter
-	status int
+	status  int
+	written int
 }
 
 func (wr *responseRecorder) WriteHeader(s int) {
@@ -159,9 +161,11 @@ func (wr *responseRecorder) WriteHeader(s int) {
 
 func (wr *responseRecorder) Write(b []byte) (int, error) {
 	if wr.status == 0 {
-		wr.status = 200
+		wr.status = http.StatusOK
 	}
-	return wr.ResponseWriter.Write(b)
+	n, err := wr.ResponseWriter.Write(b)
+	wr.written += n
+	return n, err
 }
 
 func negotiateAccept(header string, acceptables ...string) string {
