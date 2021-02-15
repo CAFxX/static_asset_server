@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	accept "github.com/timewasted/go-accept-headers"
@@ -13,7 +16,8 @@ import (
 
 func main() {
 	log, _ := zap.NewProductionConfig().Build()
-	log.Info("starting server")
+	log = log.Named("server")
+	log.Info("starting")
 
 	altPath := make(map[string]struct {
 		Image    bool              `json:"image"`
@@ -27,7 +31,7 @@ func main() {
 	}
 	err = json.Unmarshal(buf, &altPath)
 	if err != nil {
-		log.Fatal("pasring altPath", zap.Error(err))
+		log.Fatal("parsing altPath", zap.Error(err))
 	}
 	hidden := map[string]struct{}{}
 	for _, v := range altPath {
@@ -84,6 +88,7 @@ func main() {
 	}
 
 	logger := func(next http.Handler) http.Handler {
+		log := log.Named("logger")
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if ce := log.Check(zap.InfoLevel, "request"); ce != nil {
 				url, accept, acceptEncoding, start := r.URL.String(), r.Header.Get("Accept"), r.Header.Get("Accept-Encoding"), time.Now()
@@ -108,8 +113,19 @@ func main() {
 		})
 	}
 
-	handler := logger(negotiate(http.FileServer(http.Dir(os.Args[2]))))
-	log.Fatal("server", zap.Error(http.ListenAndServe(":8080", handler)))
+	fs := http.Dir(os.Args[2])
+	server := &http.Server{
+		Handler: logger(negotiate(http.FileServer(fs))),
+	}
+	go func() {
+		log.Error("http", zap.Error(server.ListenAndServe()))
+	}()
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, os.Kill, syscall.SIGTERM)
+	sig := <-ch
+	log.Info("received signal: shutting down gracefully", zap.String("signal", sig.String()))
+	server.Shutdown(context.Background())
+	log.Info("exiting")
 }
 
 type responseRecorder struct {
