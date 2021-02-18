@@ -12,11 +12,20 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     ZSTD_DICT_CMD="zstd -19 -k -c -D /dict/zstd --"
 
     PNG_OPTIPNG_CMD="optipng -o5"
-    PNG_ZOPFLIPNG_CMD="zopflipng"
+    PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=01234mepb --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
+
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
     JPG_AVIF_CMD="avifenc -s 0"
+
+    GIF_CMD="gifsicle -O3"
+    GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
+    GIF_AVIF_CMD="avifenc -s 0"
+    GIF_APNG_CMD="gif2apng"
+    GIF_OPTIPNG_CMD="optipng -o5"
+    GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=01234mepb --lossy_transparent --lossy_8bit"
+    GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
 else
     GZIP_CMD="zopfli --i1 --gzip -c --"
     BROTLI_CMD="brotli -0 --keep --stdout --"
@@ -24,11 +33,20 @@ else
     ZSTD_DICT_CMD="zstd -1 -k -c -D /dict/zstd --"
 
     PNG_OPTIPNG_CMD="optipng -o0"
-    PNG_ZOPFLIPNG_CMD="zopflipng -q"
+    PNG_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc"
+
     JPG_WEBP_CMD="cwebp -q 85"
     JPG_AVIF_CMD="avifenc"
+
+    GIF_CMD="gifsicle -O1"
+    GIF_WEBP_CMD="gif2webp -m 0 -mixed -q 90"
+    GIF_AVIF_CMD="avifenc"
+    GIF_APNG_CMD="gif2apng"
+    GIF_OPTIPNG_CMD="optipng -o0"
+    GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
+    GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
 fi
 
 job_limit () { NJOBS=${1:-$(nproc)}
@@ -114,6 +132,13 @@ JPEG_FILES=$(
         -printf '%P\n' \
 )
 
+GIF_FILES=$(
+    find . -type f \
+        -iname '*.gif' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 COMPRESSIBLE_FILES=$(
     find . -type f \
         -not -iname '*.gif' \
@@ -130,6 +155,36 @@ COMPRESSIBLE_FILES=$(
         -not -iname '*.woff2' \
         -printf '%P\n' \
 )
+
+## optimize gif images
+
+for FILE in $GIF_FILES; do
+    echo "$FILE"
+
+    $GIF_CMD -b "$FILE"
+
+    $GIF_WEBP_CMD "$FILE" -o "$FILE.webp"
+    validate "$FILE" "$FILE.webp" "image/webp" true
+
+    #$GIF_AVIF_CMD "$FILE" "$FILE.avif"
+    #validate "$FILE" "$FILE.avif" "image/avif" true
+
+    FRAMES=$(identify -format '%N' "$FILE")
+    if [ "$FRAMES" == "1" ]; then
+        $GIF_OPTIPNG_CMD "$FILE"
+        $GIF_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
+        [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE"
+
+        OPAQUE=$(identify -format '%[opaque]' "$FILE")
+        if [ "$OPAQUE" == "true" ]; then
+            convert "$FILE" pnm:- | $GIF_JPG_CMD -outfile "$FILE.jpg"
+            validate "$FILE" "$FILE.jpg" "image/jpeg" true
+        fi
+    else
+        $GIF_APNG_CMD "$FILE" "$FILE.apng"
+        validate "$FILE" "$FILE.apng" "image/apng" true
+    fi
+done
 
 ## optimize jpeg images
 
