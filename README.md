@@ -61,3 +61,9 @@ PRs are welcome. Some ideas for what to add:
 - Use unique (guaranteed collision-free) file names for asset variants
 - Provide an optional way to sort variants based on a "first contentful paint" criteria (important for image formats that support progressive decoding)
 - Add `ETag` support
+- Allow to request a specifc content-type or content-encoding via query parameters (e.g. for use with [`source`](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images#use_modern_image_formats_boldly))
+- Allow to request the original/unoptimized asset
+- Allow to control optimization on a per-file basis
+- Allow to disable optimization of certain formats (e.g. GIF files)
+- Allow to disable creation of certain variants (e.g. HEIF variants)
+- Automatic generation of resized variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
