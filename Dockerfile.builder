@@ -32,6 +32,8 @@ RUN git clone --depth 1 https://github.com/AOMediaCodec/libavif.git && \
     cd /usr/local/bin && \
     ln -s /libavif/build/avifenc
 
+RUN npm -g svgo
+
 COPY cmd/alt_path /cmd/alt_path
 RUN (cd /cmd/alt_path && go get && go build -o /usr/local/bin/alt_path)
 
