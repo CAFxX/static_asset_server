@@ -15,15 +15,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image for the asset builder
-      run: docker build . --file Dockerfile.builder --tag static_asset_builder
+      run: docker build --tag static_asset_builder --file Dockerfile.builder .
     - name: Copy the example assets to the webroot
       run: cp assets/source/* webroot/
-#   - name: Build the Docker image for the asset server with the example assets
-#     run: docker build .
-    - name: Deploy to heroku
-      uses: akhileshns/heroku-deploy@v3.11.10
-      with:
-        heroku_email: ${{secrets.HEROKU_EMAIL}} 
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "cafxx-static-asset-server-demo"
-        usedocker: true
+    - name: Build the Docker image for the asset server with the example assets
+      run: docker build --tag registry.heroku.com/cafxx-static-asset-server-demo/web --file Dockerfile .
+    - name: Login to Heroku Container registry
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:login 
+    - name: Push the Docker image
+      run: docker push registry.heroku.com/cafxx-static-asset-server-demo/web
+    - name: Deploy server
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:release -a cafxx-static-asset-server-demo web

@@ -121,9 +121,12 @@ func main() {
 		})
 	}
 
-	fs := http.Dir(webrootDir)
+	fs := justFilesFilesystem{http.Dir(webrootDir)}
 	server := &http.Server{
 		Handler: logger(negotiate(http.FileServer(fs))),
+	}
+	if port := os.Getenv("PORT"); port != "" {
+		server.Addr = ":" + port
 	}
 	go func() {
 		_, err := os.Stat(certFile)
@@ -176,4 +179,22 @@ func negotiateAccept(header string, acceptables ...string) string {
 		}
 	}
 	return ""
+}
+
+type justFilesFilesystem struct {
+	fs http.FileSystem
+}
+
+func (fs justFilesFilesystem) Open(name string) (http.File, error) {
+	f, err := fs.fs.Open(name)
+	if err != nil {
+		return nil, err
+	}
+
+	stat, err := f.Stat()
+	if err == nil && stat.IsDir() {
+		f.Close()
+		return nil, os.ErrNotExist
+	}
+	return f, err
 }
