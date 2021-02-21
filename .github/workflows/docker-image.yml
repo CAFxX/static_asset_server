@@ -3,8 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# pull_request:
+#   branches: [ main ]
 
 jobs:
 
@@ -14,5 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: akhileshns/heroku-deploy@v3.11.10
     - name: Build the Docker image for the asset builder
-      run: docker build . --file Dockerfile.builder --tag static-asset-builder:$(date +%s)
+      run: docker build . --file Dockerfile.builder --tag static_asset_builder
+    - name: Copy the example assets to the webroot
+      run: cp assets/source/* webroot/
+#   - name: Build the Docker image for the asset server with the example assets
+#     run: docker build .
+    - name: Deploy to heroku
+      with:
+        heroku_email: ${{secrets.HEROKU_EMAIL}} 
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "cafxx-static-asset-server-demo"
+        usedocker: true
