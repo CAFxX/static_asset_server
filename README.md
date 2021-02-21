@@ -2,13 +2,14 @@
 
 This repository contains a ahead-of-time static asset optimization pipeline that generates a container image providing a standalone static asset server.
 
-The optimization pipeline, whose responsibility is generating the optimized static assets as well as the index file, is implemented in the `compress.sh` script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, gifsicle, ...) to perform these tasks.
+The optimization pipeline, whose responsibility is generating the optimized static assets as well as the index file, is implemented in the `compress.sh` script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, gifsicle, svgo, ...) to perform these tasks.
 
 Currently the following optimizations are performed:
 
 - PNG image files are optimized with optipng/zopflipng, and alternate versions are created in AVIF, WebP and JPEG format (the last one only if the PNG file contains no transparent pixels)
 - JPEG image files are optimized with mozjpeg and their quality lowered to 85; alternate versions are created in AVIF and WebP format
 - GIF image files are optimized with gifsicle, and alternate versions are created in WebP, APNG, PNG (when the image contains a single frame), and JPEG (when the image contains a single frame and no transparency)
+- SVG image files are minified using svgo - and are then compressed as other files (see below)
 - Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
 The [standalone HTTP server](cmd/server/main.go) is written in Go (with `net/http`) and supports `Content-Type` and `Content-Encoding` negotiation. It expects the optimized static assets to be contained under a root directory, as well as the index file (`alt_path.json`) that lists the relationships (e.g. alternate content type or content encoding) between variants of each asset. The server always returns to the client the smallest variant that the client supports, and supports revalidation/caching using the asset modification date. The appropriate `Vary` header is added to the response to ensure downstream caches can also correctly  perform the content negotiation.
@@ -128,7 +129,6 @@ PRs are welcome. Some ideas for what to add:
 - Add dictionary serving
 - Add JPEG-XL `jxl` content-encoding variant
 - Add LZMA content-encoding variants
-- Add SVG minification
 - Add WebP optimization
 - Add AVIF optimization
 - Add AVIF variant for WebP and GIF assets
