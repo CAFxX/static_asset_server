@@ -26,6 +26,8 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     GIF_OPTIPNG_CMD="optipng -o5"
     GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+    
+    SVG_CMD="svgo --multipass"
 else
     GZIP_CMD="zopfli --i1 --gzip -c --"
     BROTLI_CMD="brotli -0 --keep --stdout --"
@@ -47,6 +49,8 @@ else
     GIF_OPTIPNG_CMD="optipng -o0"
     GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+    
+    SVG_CMD="svgo"
 fi
 
 job_limit () { NJOBS=${1:-$(nproc)}
@@ -140,6 +144,13 @@ GIF_FILES=$(
         -printf '%P\n' \
 )
 
+SVG_FILES=$(
+    find . -type f \
+        -iname '*.svg' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 JSON_FILES=$(
     find . -type f \
         -iname '*.json' \
@@ -163,6 +174,14 @@ COMPRESSIBLE_FILES=$(
         -not -iname '*.woff2' \
         -printf '%P\n' \
 )
+
+## optimize svg images
+
+for FILE in $SVG_FILES; do
+    echo "$FILE"
+    
+    $SVG_CMD "$FILE"
+done
 
 ## optimize gif images
 
