@@ -12,7 +12,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     ZSTD_DICT_CMD="zstd -19 -k -c -D /dict/zstd --"
 
     PNG_OPTIPNG_CMD="optipng -o5"
-    PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=01234mepb --lossy_transparent --lossy_8bit"
+    PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
 
@@ -24,7 +24,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     GIF_AVIF_CMD="avifenc -s 0"
     GIF_APNG_CMD="gif2apng"
     GIF_OPTIPNG_CMD="optipng -o5"
-    GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=01234mepb --lossy_transparent --lossy_8bit"
+    GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
 else
     GZIP_CMD="zopfli --i1 --gzip -c --"
@@ -109,9 +109,9 @@ compress_file() { FILE=$1
     $ZSTD_CMD "$FILE" > "$FILE_ZSTD"
     validate "$FILE" "$FILE_ZSTD" zstd false
 
-    local FILE_ZSTD="$FILE.zst-dict"
-    $ZSTD_DICT_CMD "$FILE" > "$FILE_ZSTD"
-    validate "$FILE" "$FILE_ZSTD" zstd-dict false
+    #local FILE_ZSTD="$FILE.zst-dict"
+    #$ZSTD_DICT_CMD "$FILE" > "$FILE_ZSTD"
+    #validate "$FILE" "$FILE_ZSTD" zstd-dict false
 }
 
 ## list files to be compressed
@@ -234,8 +234,8 @@ for FILE in $COMPRESSIBLE_FILES; do
 done
 
 mkdir /dict
-echo "$COMPRESSIBLE_FILES" >/filelist
-zstd --train -o /dict/zstd --maxdict=10000 --filelist=/filelist
+#echo "$COMPRESSIBLE_FILES" >/filelist
+#zstd --train -o /dict/zstd --maxdict=10000 --filelist=/filelist
 
 for FILE in $COMPRESSIBLE_FILES; do
     echo "$FILE"
