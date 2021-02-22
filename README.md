@@ -56,6 +56,12 @@ When testing the live demo, you can check in the developer console the negotiati
 <tr><td><a href="assets/source/bear.webp">bear.webp</a> (132108 bytes)<td>
 <a href="assets/optimized/bear.webp">bear.webp</a> (132108 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/bear.webp">bear.webp</a>
+<tr><td><a href="assets/source/example.json">example.json</a> (3644 bytes)<td>
+<a href="assets/optimized/example.json">example.json</a> (2711 bytes)<br>
+<a href="assets/optimized/example.json.br">example.json.br</a> (880 bytes)<br>
+<a href="assets/optimized/example.json.gz">example.json.gz</a> (990 bytes)<br>
+<a href="assets/optimized/example.json.zst">example.json.zst</a> (1011 bytes)<br>
+<td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/example.json">example.json</a>
 <tr><td><a href="assets/source/gradient.png">gradient.png</a> (3974 bytes)<td>
 <a href="assets/optimized/gradient.png">gradient.png</a> (2034 bytes)<br>
 <a href="assets/optimized/gradient.png.avif">gradient.png.avif</a> (1628 bytes)<br>
@@ -132,7 +138,6 @@ PRs are welcome. Some ideas for what to add:
 - Add HTML minification
 - Add Javascript minification
 - Add CSS minification
-- Add JSON minification
 - Write some tests
 - Optionally embed assets in the server binary (`go:embed`)
 - Support caching optimization results

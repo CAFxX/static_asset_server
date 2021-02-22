@@ -140,6 +140,13 @@ GIF_FILES=$(
         -printf '%P\n' \
 )
 
+JSON_FILES=$(
+    find . -type f \
+        -iname '*.json' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 COMPRESSIBLE_FILES=$(
     find . -type f \
         -not -iname '*.gif' \
@@ -211,6 +218,7 @@ done
 
 for FILE in $PNG_FILES; do
     echo "$FILE"
+
     $PNG_OPTIPNG_CMD "$FILE"
     $PNG_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
     [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE"
@@ -226,6 +234,15 @@ for FILE in $PNG_FILES; do
         convert "$FILE" pnm:- | cjpeg -quality 90 -optimize -progressive -sample 1x1 -outfile "$FILE.jpg"
         validate "$FILE" "$FILE.jpg" "image/jpeg" true
     fi
+done
+
+## minify json files
+
+for FILE in $JSON_FILES; do
+    echo "$FILE"
+
+    jq -c -S <"$FILE" >"$FILE.jq"
+    mv -f "$FILE.jq" "$FILE"
 done
 
 ## precompress uncompressed files
