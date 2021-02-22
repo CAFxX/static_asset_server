@@ -142,3 +142,4 @@ PRs are welcome. Some ideas for what to add:
 - Allow to disable creation of certain variants (e.g. HEIF variants)
 - Automatic generation of resized variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
 - Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
+- Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
