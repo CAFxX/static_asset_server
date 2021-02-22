@@ -63,6 +63,10 @@ When testing the live demo, you can check in the developer console the negotiati
 <tr><td><a href="assets/source/hourglass.gif">hourglass.gif</a> (875 bytes)<td>
 <a href="assets/optimized/hourglass.gif">hourglass.gif</a> (746 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/hourglass.gif">hourglass.gif</a>
+<tr><td><a href="assets/source/kiss.gif">kiss.gif</a> (384825 bytes)<td>
+<a href="assets/optimized/kiss.gif">kiss.gif</a> (371623 bytes)<br>
+<a href="assets/optimized/kiss.gif.webp">kiss.gif.webp</a> (197796 bytes)<br>
+<td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/kiss.gif">kiss.gif</a>
 <tr><td><a href="assets/source/make-it-new.jpg">make-it-new.jpg</a> (1084975 bytes)<td>
 <a href="assets/optimized/make-it-new.jpg">make-it-new.jpg</a> (369470 bytes)<br>
 <a href="assets/optimized/make-it-new.jpg.avif">make-it-new.jpg.avif</a> (357416 bytes)<br>
