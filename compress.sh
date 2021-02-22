@@ -21,7 +21,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
 
     GIF_CMD="gifsicle -O3"
     GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
-    GIF_AVIF_CMD="avifenc -s 0"
+    GIF_AVIF_CMD="convert -quality 90"
     GIF_APNG_CMD="gif2apng"
     GIF_OPTIPNG_CMD="optipng -o5"
     GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
@@ -42,7 +42,7 @@ else
 
     GIF_CMD="gifsicle -O1"
     GIF_WEBP_CMD="gif2webp -m 0 -mixed -q 90"
-    GIF_AVIF_CMD="avifenc"
+    GIF_AVIF_CMD="convert -quality 90"
     GIF_APNG_CMD="gif2apng"
     GIF_OPTIPNG_CMD="optipng -o0"
     GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
@@ -170,7 +170,7 @@ for FILE in $GIF_FILES; do
     #$GIF_AVIF_CMD "$FILE" "$FILE.avif"
     #validate "$FILE" "$FILE.avif" "image/avif" true
 
-    FRAMES=$(identify -format '%N' "$FILE")
+    FRAMES=$(identify -format '%n' "$FILE" | head -1)
     if [ "$FRAMES" == "1" ]; then
         $GIF_OPTIPNG_CMD "$FILE"
         $GIF_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
