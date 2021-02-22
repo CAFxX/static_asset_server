@@ -73,8 +73,9 @@ validate() { FILE=$1; FILE_C=$2; TYPE=$3; IMAGE=$4
     if (( ABSDIFF < MIN_ABSDIFF || RELDIFF < MIN_RELDIFF || FILE_C_SZ == 0 )); then
         rm "$FILE_C"
     else
+        local MIMETYPE=$(file --brief --mime $FILE)
         touch -r "$FILE" "$FILE_C"
-        alt_path /alt_path.db "/$FILE" "/$FILE_C" "$IMAGE" "$TYPE" "$FILE_C_SZ"
+        alt_path /alt_path.db "/$FILE" "/$FILE_C" "$IMAGE" "$TYPE" "$FILE_C_SZ" "$MIMETYPE"
     fi
 }
 
