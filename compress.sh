@@ -249,7 +249,7 @@ foreach "$PNG_FILES" process_png
 ## minify json files
 
 minify_json() { FILE=$1
-    jq -c -S <"$FILE" >"$FILE.jq"
+    jq -c -S <"$FILE" >"$FILE.jq" || rm -f "$FILE.jq"
     mv -f "$FILE.jq" "$FILE"
 }
 
@@ -258,7 +258,8 @@ foreach "$JSON_FILES" minify_json
 ## minify js files
 
 minify_js() { FILE=$1
-    uglifyjs --compress --mangle -o "$FILE.minifyjs" -- "$FILE" && mv -f "$FILE.minifyjs" "$FILE"
+    uglifyjs --compress --mangle -o "$FILE.minifyjs" -- "$FILE" || rm -f "$FILE.minifyjs"
+    mv -f "$FILE.minifyjs" "$FILE"
 }
 
 foreach "$JS_FILES" minify_js
