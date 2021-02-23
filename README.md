@@ -125,7 +125,6 @@ When testing the live demo, you can check in the developer console the negotiati
 
 PRs are welcome. Some ideas for what to add:
 
-- Make the baking process run in parallel
 - Add zstd/gzip/brotli dictionary support
 - Add dictionary serving
 - Add JPEG-XL `jxl` content-encoding variant
