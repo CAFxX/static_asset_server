@@ -149,6 +149,7 @@ PRs are welcome. Some ideas for what to add:
 - Allow to control optimization on a per-file basis
 - Allow to disable optimization of certain formats (e.g. GIF files)
 - Allow to disable creation of certain variants (e.g. HEIF variants)
-- Automatic generation of resized variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
+- Automatic generation of lower resoluation variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
+- Automatic generation of lower quality variants (e.g. q=60~70, q=85~90, and lossless)
 - Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
 - Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
