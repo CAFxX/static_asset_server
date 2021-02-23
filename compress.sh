@@ -91,7 +91,7 @@ foreach() { FILES=$1; FUNC=$2
     for FILE in $FILES; do
         echo "> $FILE"
         (
-            local out=$( ( set -x; "$FUNC" "$FILE" ) 2>&1 | sed -e "s/^/| /" )
+            local out=$( ( set -x; "$FUNC" "$FILE" ) 2>&1 | sed -e 's/^/| /' | sed -e 's/\r/\r| /' )
             {
                 flock $fd
                 echo "< $FILE"
