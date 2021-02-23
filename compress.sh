@@ -142,6 +142,13 @@ JSON_FILES=$(
         -printf '%P\n' \
 )
 
+JS_FILES=$(
+    find . -type f \
+        -iname '*.js' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 COMPRESSIBLE_FILES=$(
     find . -type f \
         -not -iname '*.gif' \
@@ -247,6 +254,14 @@ minify_json() { FILE=$1
 }
 
 foreach "$JSON_FILES" minify_json
+
+## minify js files
+
+minify_js() { FILE=$1
+    uglifyjs --compress --mangle -o "$FILE.minifyjs" -- "$FILE" && mv -f "$FILE.minifyjs" "$FILE"
+}
+
+foreach "$JS_FILES" minify_js
 
 ## precompress uncompressed files
 

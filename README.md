@@ -11,6 +11,7 @@ Currently the following optimizations are performed:
 - GIF image files are optimized with gifsicle, and alternate versions are created in WebP, APNG, PNG (when the image contains a single frame), and JPEG (when the image contains a single frame and no transparency)
 - SVG image files are minified using svgo - and are then compressed as other files (see below)
 - JSON files are minified using jq - and are then compressed as other files (see below)
+- JS files are minified using UglifyJS - and are then compressed as other files (see below)
 - Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
 The [standalone HTTP server](cmd/server/main.go) is written in Go (with `net/http`) and supports `Content-Type` and `Content-Encoding` negotiation. It expects the optimized static assets to be contained under a root directory, as well as the index file (`alt_path.json`) that lists the relationships (e.g. alternate content type or content encoding) between variants of each asset. The server always returns to the client the smallest variant that the client supports, and supports revalidation/caching using the asset modification date. The appropriate `Vary` header is added to the response to ensure downstream caches can also correctly  perform the content negotiation.
@@ -71,6 +72,12 @@ When testing the live demo, you can check in the developer console the negotiati
 <tr><td><a href="assets/source/hourglass.gif">hourglass.gif</a> (875 bytes)<td>
 <a href="assets/optimized/hourglass.gif">hourglass.gif</a> (746 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/hourglass.gif">hourglass.gif</a>
+<tr><td><a href="assets/source/jquery-1.11.3.js">jquery-1.11.3.js</a> (284394 bytes)<td>
+<a href="assets/optimized/jquery-1.11.3.js">jquery-1.11.3.js</a> (95005 bytes)<br>
+<a href="assets/optimized/jquery-1.11.3.js.br">jquery-1.11.3.js.br</a> (29849 bytes)<br>
+<a href="assets/optimized/jquery-1.11.3.js.gz">jquery-1.11.3.js.gz</a> (31920 bytes)<br>
+<a href="assets/optimized/jquery-1.11.3.js.zst">jquery-1.11.3.js.zst</a> (31334 bytes)<br>
+<td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/jquery-1.11.3.js">jquery-1.11.3.js</a>
 <tr><td><a href="assets/source/kiss.gif">kiss.gif</a> (384825 bytes)<td>
 <a href="assets/optimized/kiss.gif">kiss.gif</a> (371623 bytes)<br>
 <a href="assets/optimized/kiss.gif.webp">kiss.gif.webp</a> (197796 bytes)<br>
@@ -136,7 +143,6 @@ PRs are welcome. Some ideas for what to add:
 - Add JPEG-XL (`image/jxl`) variants for image assets
 - Add WebP2 variants for image assets
 - Add HTML minification
-- Add Javascript minification
 - Add CSS minification
 - Write some tests
 - Optionally embed assets in the server binary (`go:embed`)
