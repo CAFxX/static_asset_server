@@ -159,3 +159,4 @@ PRs are welcome. Some ideas for what to add:
 - Automatic generation of lower quality variants (e.g. q=65, q=85, and lossless)
 - Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
 - Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
+- Decide whether to migrate to https://github.com/kevinpollet/nego
