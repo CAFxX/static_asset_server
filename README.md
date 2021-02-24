@@ -12,7 +12,7 @@ Currently the following optimizations are performed:
 - SVG image files are minified using svgo - and are then compressed as other files (see below)
 - JSON files are minified using jq - and are then compressed as other files (see below)
 - JS files are minified using UglifyJS - and are then compressed as other files (see below)
-- Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
+- Other files are statically compressed with zopfli (gzip), brotli, zstandard (zstd) and lzma (xz)
 
 The [standalone HTTP server](cmd/server/main.go) is written in Go (with `net/http`) and supports `Content-Type` and `Content-Encoding` negotiation. It expects the optimized static assets to be contained under a root directory, as well as the index file (`alt_path.json`) that lists the relationships (e.g. alternate content type or content encoding) between variants of each asset. The server always returns to the client the smallest variant that the client supports, and supports revalidation/caching using the asset modification date. The appropriate `Vary` header is added to the response to ensure downstream caches can also correctly  perform the content negotiation.
 
@@ -149,7 +149,6 @@ PRs are welcome. Some ideas for what to add:
       - Add zstd/gzip/brotli dictionary generation
       - Add dictionary negotiation
       - Add dictionary serving
-   - Add LZMA content-encoding variants
 - Optimization pipeline
    - Support caching optimization results
    - Use unique (guaranteed collision-free) file names for asset variants

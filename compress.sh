@@ -10,6 +10,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     BROTLI_CMD="brotli --best --keep --stdout --"
     ZSTD_CMD="zstd -19 -k -c --"
     ZSTD_DICT_CMD="zstd -19 -k -c -D /dict/zstd --"
+    XZ_CMD="xz -9e --threads=1"
 
     PNG_OPTIPNG_CMD="optipng -o5"
     PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
@@ -33,6 +34,7 @@ else
     BROTLI_CMD="brotli -0 --keep --stdout --"
     ZSTD_CMD="zstd -1 -k -c --"
     ZSTD_DICT_CMD="zstd -1 -k -c -D /dict/zstd --"
+    XZ_CMD="xz -0 --threads=1"
 
     PNG_OPTIPNG_CMD="optipng -o0"
     PNG_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
@@ -156,11 +158,14 @@ COMPRESSIBLE_FILES=$(
         -not -iname '*.jpg' \
         -not -iname '*.jpeg' \
         -not -iname '*.webp' \
+        -not -iname '*.avif' \
+        -not -iname '*.apng' \
         -not -iname '*.gz' \
         -not -iname '*.bz2' \
         -not -iname '*.zst' \
         -not -iname '*.br' \
         -not -iname '*.xz' \
+        -not -iname '*.lzma' \
         -not -iname '*.woff' \
         -not -iname '*.woff2' \
         -printf '%P\n' \
@@ -277,8 +282,10 @@ check_file() { FILE=$1
     if [ -f "$FILE_BROTLI" ]; then echo "$FILE_BROTLI already exists"; exit -3; fi
     local FILE_ZSTD="$FILE.zst"
     if [ -f "$FILE_ZSTD" ]; then echo "$FILE_ZSTD already exists"; exit -4; fi
-    local FILE_ZSTD="$FILE.zst-dict"
-    if [ -f "$FILE_ZSTD" ]; then echo "$FILE_ZSTD already exists"; exit -4; fi
+    local FILE_ZSTD_DICT="$FILE.zst-dict"
+    if [ -f "$FILE_ZSTD_DICT" ]; then echo "$FILE_ZSTD_DICT already exists"; exit -5; fi
+    local FILE_XZ="$FILE.xz"
+    if [ -f "$FILE_XZ" ]; then echo "$FILE_XZ already exists"; exit -6; fi
 }
 
 for FILE in $COMPRESSIBLE_FILES; do
@@ -310,6 +317,10 @@ compress_file() { FILE=$1
     #local FILE_ZSTD="$FILE.zst-dict"
     #$ZSTD_DICT_CMD "$FILE" > "$FILE_ZSTD"
     #validate "$FILE" "$FILE_ZSTD" zstd-dict false
+
+    local FILE_XZ="$FILE.xz"
+    $XZ_CMD --keep --stdout "$FILE" > "$FILE_XZ"
+    validate "$FILE" "$FILE_XZ" xz false
 }
 
 foreach "$COMPRESSIBLE_FILES" compress_file

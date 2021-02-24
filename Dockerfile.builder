@@ -5,7 +5,7 @@ WORKDIR /
 
 RUN echo 'APT::Acquire::Retries "3";' >/etc/apt/apt.conf.d/80-retries && \
     apt-get update && \
-    apt-get install -y zopfli brotli zstd optipng webp imagemagick gif2apng gifsicle \
+    apt-get install -y zopfli brotli zstd xz-utils optipng webp imagemagick gif2apng gifsicle \
                        cmake autoconf automake libtool nasm ninja-build make pkg-config git libpng-dev libjpeg-dev \
                        golang \
                        jq npm
