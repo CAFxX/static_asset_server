@@ -132,32 +132,39 @@ When testing the live demo, you can check in the developer console the negotiati
 
 PRs are welcome. Some ideas for what to add:
 
-- Add zstd/gzip/brotli dictionary support
-- Add dictionary serving
-- Add JPEG-XL `jxl` content-encoding variant
-- Add LZMA content-encoding variants
-- Add WebP optimization
-- Add AVIF optimization
-- Add AVIF variant for WebP and GIF assets
-- Add HEIF (`image/heif`) variants for image assets
-- Add JPEG-XL (`image/jxl`) variants for image assets
-- Add WebP2 variants for image assets
-- Add HTML minification
-- Add CSS minification
-- Write some tests
-- Optionally embed assets in the server binary (`go:embed`)
-- Support caching optimization results
-- Use unique (guaranteed collision-free) file names for asset variants
-- Provide an optional way to sort variants based on a "first contentful paint" criteria (important for image formats that support progressive decoding)
-- Add `ETag` support
-- Allow to request a specifc content-type or content-encoding via query parameters (e.g. for use with [`source`](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images#use_modern_image_formats_boldly))
-- Allow to request the original/unoptimized asset
-- Allow to control optimization on a per-file basis
-- Allow to disable optimization of certain formats (e.g. GIF files)
-- Allow to disable creation of certain variants (e.g. HEIF variants)
-- Automatic generation of lower resoluation variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
-- Automatic generation of lower quality variants (e.g. q=65, q=85, and lossless)
-- Automatic generation of lower decompression overhead variants (e.g. enable decoding with limited amounts of memory, or slow CPU)
-- Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
-- Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
-- Decide whether to migrate to https://github.com/kevinpollet/nego
+- General
+   - Write tests
+- Image formats
+   - Add WebP optimization
+   - Add AVIF optimization
+   - Add AVIF variant for WebP and GIF assets
+   - Add HEIF (`image/heif`) variants for image assets
+   - Add JPEG-XL (`image/jxl`) variants for image assets
+   - Add JPEG-XL `jxl` content-encoding variant
+   - Add WebP2 variants for image assets
+- Other data formats
+   - Add HTML minification
+   - Add CSS minification
+   - Dictionary compression
+      - Add zstd/gzip/brotli dictionary generation
+      - Add dictionary negotiation
+      - Add dictionary serving
+   - Add LZMA content-encoding variants
+- Optimization pipeline
+   - Support caching optimization results
+   - Use unique (guaranteed collision-free) file names for asset variants
+   - Allow to control optimization on a per-file basis
+   - Allow to disable optimization of certain formats (e.g. GIF files)
+   - Allow to disable creation of certain variants (e.g. HEIF variants)
+   - Automatic generation of lower resoluation variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
+   - Automatic generation of lower quality variants (e.g. q=65, q=85, and lossless)
+   - Automatic generation of lower decompression overhead variants (e.g. enable decoding with limited amounts of memory, or slow CPU)
+- Asset server
+   - Optionally embed assets in the server binary (`go:embed`)
+   - Provide an optional way to serve variants based on a "first contentful paint" criteria (important for image formats that support progressive decoding)
+   - Add `ETag` support
+   - Allow to request a specifc content-type or content-encoding via query parameters (e.g. for use with [`source`](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images#use_modern_image_formats_boldly))
+   - Allow to request the original/unoptimized asset
+   - Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
+   - Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
+   - Decide whether to migrate to https://github.com/kevinpollet/nego
