@@ -2,6 +2,8 @@
 
 This repository contains a ahead-of-time static asset optimization pipeline that generates a container image providing a standalone static asset server.
 
+## Optimization pipeline
+
 The optimization pipeline, whose responsibility is generating the optimized static assets as well as the index file, is implemented in the `compress.sh` script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, gifsicle, svgo, ...) to perform these tasks.
 
 Currently the following optimizations are performed:
@@ -14,11 +16,13 @@ Currently the following optimizations are performed:
 - JS files are minified using UglifyJS - and are then compressed as other files (see below)
 - Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
+## Asset server
+
 The [standalone HTTP server](cmd/server/main.go) is written in Go (with `net/http`) and supports `Content-Type` and `Content-Encoding` negotiation. It expects the optimized static assets to be contained under a root directory, as well as the index file (`alt_path.json`) that lists the relationships (e.g. alternate content type or content encoding) between variants of each asset. The server always returns to the client the smallest variant that the client supports, and supports revalidation/caching using the asset modification date. The appropriate `Vary` header is added to the response to ensure downstream caches can also correctly  perform the content negotiation.
 
 The server can optionally serve the static assets over HTTPS by providing the server image with a certificate and key in `/server.crt` and `/server.key` (it is recommended to mount these as secrets when the container is started, e.g. via Docker [bind mounts](https://docs.docker.com/storage/bind-mounts/) or via Kubernetes [secrets](https://kubernetes.io/docs/concepts/configuration/secret/)). When using HTTPS the server also supports HTTP/2.
 
-The server image is based on [`gcr.io/distroless/static:nonroot`](https://github.com/GoogleContainerTools/distroless): as such it contains no shell or other binaries apart from the standalone HTTP server above.
+The server image is based on [`gcr.io/distroless/static:nonroot`](https://github.com/GoogleContainerTools/distroless): as such it contains no shell or other binaries apart from the standalone HTTP server above. The server does not need write access to the root filesystem of the container, so it is recommended to run with a read-only root filesystem (`readOnlyRootFilesystem: true` in Kubernetes). Similarly, the server does not need elevated privileges and runs with a non-root user, so it is recommended to disable running as root (`runAsNonRoot: true` in Kubernetes).
 
 ## Usage
 
