@@ -185,7 +185,7 @@ process_gif() { FILE=$1
     #$GIF_AVIF_CMD "$FILE" "$FILE.avif"
     #validate "$FILE" "$FILE.avif" "image/avif" true
 
-    FRAMES=$(identify -format '%n' "$FILE" | head -1)
+    FRAMES=$(identify -format '%n ' "$FILE" | cut -f1 -d' ')
     if [ "$FRAMES" == "1" ]; then
         $GIF_OPTIPNG_CMD "$FILE"
         $GIF_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
