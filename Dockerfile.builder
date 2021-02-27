@@ -10,7 +10,7 @@ RUN echo 'APT::Acquire::Retries "3";' >/etc/apt/apt.conf.d/80-retries && \
                        golang \
                        jq npm
 
-RUN git clone --depth=1 https://github.com/mozilla/mozjpeg.git && \
+RUN git clone --single-branch --branch v4.0.3 --depth=1 https://github.com/mozilla/mozjpeg.git && \
     cd mozjpeg && \
     mkdir build && \
     cd build && \
