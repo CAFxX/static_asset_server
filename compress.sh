@@ -26,6 +26,10 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     GIF_OPTIPNG_CMD="optipng -o5"
     GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+
+    WEBP_AVIF_CMD="avifenc -s 0"
+    WEBP_OPTIPNG_CMD="optipng -o5"
+    WEBP_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     
     SVG_CMD="svgo --multipass"
 else
@@ -49,6 +53,10 @@ else
     GIF_OPTIPNG_CMD="optipng -o0"
     GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+    
+    WEBP_AVIF_CMD="avifenc"
+    WEBP_OPTIPNG_CMD="optipng -o0"
+    WEBP_ZOPFLIPNG_CMD="zopflipng --lossy_transparent --lossy_8bit"
     
     SVG_CMD="svgo"
 fi
@@ -128,6 +136,13 @@ GIF_FILES=$(
         -printf '%P\n' \
 )
 
+WEBP_FILES=$(
+    find . -type f \
+        -iname '*.webp' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 SVG_FILES=$(
     find . -type f \
         -iname '*.svg' \
@@ -185,20 +200,21 @@ process_gif() { FILE=$1
     #$GIF_AVIF_CMD "$FILE" "$FILE.avif"
     #validate "$FILE" "$FILE.avif" "image/avif" true
 
+    $GIF_APNG_CMD "$FILE" "$FILE.apng"
+    validate "$FILE" "$FILE.apng" "image/apng" true
+
     FRAMES=$(identify -format '%n ' "$FILE" | cut -f1 -d' ')
     if [ "$FRAMES" == "1" ]; then
-        $GIF_OPTIPNG_CMD "$FILE"
-        $GIF_ZOPFLIPNG_CMD "$FILE" "$FILE.zopflipng"
-        [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE"
+        $GIF_OPTIPNG_CMD -out "$FILE.png" "$FILE"
+        $GIF_ZOPFLIPNG_CMD "$FILE.png" "$FILE.zopflipng"
+        [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE.png"
+        validate "$FILE" "$FILE.png" "image/png" true
 
         OPAQUE=$(identify -format '%[opaque]' "$FILE")
         if [ "$OPAQUE" == "true" ]; then
             convert "$FILE" pnm:- | $GIF_JPG_CMD -outfile "$FILE.jpg"
             validate "$FILE" "$FILE.jpg" "image/jpeg" true
         fi
-    else
-        $GIF_APNG_CMD "$FILE" "$FILE.apng"
-        validate "$FILE" "$FILE.apng" "image/apng" true
     fi
 }
 
@@ -245,6 +261,34 @@ process_png() { FILE=$1
 }
 
 foreach "$PNG_FILES" process_png
+
+## optimize webp images
+
+process_webp() { FILE=$1
+    # `identify -format %n` does not work correctly for webp
+    FRAMES=$(webpinfo -quiet -summary "$FILE" | grep 'Number of frames:' | cut -f4 -d' ')
+    if [ "$FRAMES" == "1" ]; then
+        dwebp "$FILE" -o "$FILE.png"
+        $WEBP_OPTIPNG_CMD "$FILE.png"
+        $WEBP_ZOPFLIPNG_CMD "$FILE.png" "$FILE.zopflipng"
+        [[ -f "$FILE.zopflipng" ]] && mv -f "$FILE.zopflipng" "$FILE.png"
+        
+        # we currently can't yet generate animated AVIF
+        # we use the PNG because avifenc can not read webp
+        $WEBP_AVIF_CMD "$FILE.png" "$FILE.avif"
+        validate "$FILE" "$FILE.avif" "image/avif" true
+
+        validate "$FILE" "$FILE.png" "image/png" true
+
+        OPAQUE=$(identify -format '%[opaque]' "$FILE")
+        if [ "$OPAQUE" == "true" ]; then
+            convert "$FILE" pnm:- | cjpeg -quality 85 -optimize -progressive -outfile "$FILE.jpg"
+            validate "$FILE" "$FILE.jpg" "image/jpeg" true
+        fi
+    fi
+}
+
+foreach "$WEBP_FILES" process_webp
 
 ## minify json files
 

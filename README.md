@@ -11,6 +11,7 @@ Currently the following optimizations are performed:
 - PNG image files are optimized with optipng/zopflipng, and alternate versions are created in AVIF, WebP and JPEG format (the last one only if the PNG file contains no transparent pixels)
 - JPEG image files are optimized with mozjpeg and their quality lowered to 85; alternate versions are created in AVIF and WebP format
 - GIF image files are optimized with gifsicle, and alternate versions are created in WebP, APNG, PNG (when the image contains a single frame), and JPEG (when the image contains a single frame and no transparency)
+- WebP image files with a single frame: variants are created in AVIF, PNG and JPEG (the last one only when the image contains no transparent pixels)
 - SVG image files are minified using svgo - and are then compressed as other files (see below)
 - JSON files are minified using jq - and are then compressed as other files (see below)
 - JS files are minified using UglifyJS - and are then compressed as other files (see below)
@@ -108,6 +109,10 @@ When testing the live demo, you can check in the developer console the negotiati
 <a href="assets/optimized/reddit.html.gz">reddit.html.gz</a> (291533 bytes)<br>
 <a href="assets/optimized/reddit.html.zst">reddit.html.zst</a> (192423 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/reddit.html">reddit.html</a>
+<tr><td><a href="assets/source/rose.webp">rose.webp</a> (81978 bytes)<td>
+<a href="assets/optimized/rose.webp">rose.webp</a> (81978 bytes)<br>
+<a href="assets/optimized/rose.webp.avif">rose.webp.avif</a> (17067 bytes)<br>
+<td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/rose.webp">rose.webp</a>
 <tr><td><a href="assets/source/social.png">social.png</a> (93404 bytes)<td>
 <a href="assets/optimized/social.png">social.png</a> (68363 bytes)<br>
 <a href="assets/optimized/social.png.avif">social.png.avif</a> (36592 bytes)<br>
