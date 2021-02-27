@@ -20,8 +20,6 @@ jobs:
       run: cp assets/source/* webroot/
     - name: Build the Docker image for the asset server with the example assets
       run: docker build --tag registry.heroku.com/cafxx-static-asset-server-demo/web --file Dockerfile .
-    - name: Optimization results
-      run: jq </alt_path.json
     - name: Login to Heroku Container registry
       if: ${{ github.ref == 'refs/heads/main' }}
       env: 
