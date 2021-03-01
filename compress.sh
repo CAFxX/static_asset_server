@@ -361,3 +361,5 @@ foreach "$COMPRESSIBLE_FILES" compress_file
 wait # until all files are processed
 
 alt_path /alt_path.db >/alt_path.json
+
+jq </alt_path.json
