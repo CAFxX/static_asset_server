@@ -164,6 +164,13 @@ JS_FILES=$(
         -printf '%P\n' \
 )
 
+HTML_FILES=$(
+    find . -type f \
+        \( -iname '*.htm' -or -iname '*.html' \) \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 COMPRESSIBLE_FILES=$(
     find . -type f \
         -not -iname '*.gif' \
@@ -307,6 +314,15 @@ minify_js() { FILE=$1
 }
 
 foreach "$JS_FILES" minify_js
+
+## minify html files
+
+minify_html() { FILE=$1
+    html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true -o "$FILE.htmlminifier" -- "$FILE" || rm -f "$FILE.htmlminifier"
+    mv -f "$FILE.htmlminifier" "$FILE"
+}
+
+foreach "$HTML_FILES" minify_html
 
 ## precompress uncompressed files
 

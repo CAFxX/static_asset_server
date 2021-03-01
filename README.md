@@ -14,7 +14,8 @@ Currently the following optimizations are performed:
 - WebP image files with a single frame: variants are created in AVIF, PNG and JPEG (the last one only when the image contains no transparent pixels)
 - SVG image files are minified using svgo - and are then compressed as other files (see below)
 - JSON files are minified using jq - and are then compressed as other files (see below)
-- JS files are minified using UglifyJS - and are then compressed as other files (see below)
+- JS files are minified using [UglifyJS](https://github.com/mishoo/UglifyJS) - and are then compressed as other files (see below)
+- HTML files are minified using [htmlminifier](https://github.com/kangax/html-minifier) - and are then compressed as other files (see below)
 - Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
 ## Asset server
@@ -58,7 +59,7 @@ When testing the live demo, you can check in the developer console the negotiati
 
 <table><thead><tr><th>Source<th>Optimized variants<th>Live demo<tbody>
 <tr><td><a href="assets/source/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (1479380 bytes)<td>
-<a href="assets/optimized/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (305538 bytes)<br>
+<a href="assets/optimized/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (305494 bytes)<br>
 <a href="assets/optimized/a-chance-of-northern-lights.jpg.webp">a-chance-of-northern-lights.jpg.webp</a> (266378 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a>
 <tr><td><a href="assets/source/bear.webp">bear.webp</a> (132108 bytes)<td>
@@ -88,7 +89,7 @@ When testing the live demo, you can check in the developer console the negotiati
 <a href="assets/optimized/kiss.gif.webp">kiss.gif.webp</a> (197796 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/kiss.gif">kiss.gif</a>
 <tr><td><a href="assets/source/make-it-new.jpg">make-it-new.jpg</a> (1084975 bytes)<td>
-<a href="assets/optimized/make-it-new.jpg">make-it-new.jpg</a> (369470 bytes)<br>
+<a href="assets/optimized/make-it-new.jpg">make-it-new.jpg</a> (369427 bytes)<br>
 <a href="assets/optimized/make-it-new.jpg.avif">make-it-new.jpg.avif</a> (357416 bytes)<br>
 <a href="assets/optimized/make-it-new.jpg.webp">make-it-new.jpg.webp</a> (338696 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/make-it-new.jpg">make-it-new.jpg</a>
@@ -104,10 +105,10 @@ When testing the live demo, you can check in the developer console the negotiati
 <a href="assets/optimized/pattern-color.png.webp">pattern-color.png.webp</a> (162706 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/pattern-color.png">pattern-color.png</a>
 <tr><td><a href="assets/source/reddit.html">reddit.html</a> (982765 bytes)<td>
-<a href="assets/optimized/reddit.html">reddit.html</a> (982765 bytes)<br>
-<a href="assets/optimized/reddit.html.br">reddit.html.br</a> (180965 bytes)<br>
-<a href="assets/optimized/reddit.html.gz">reddit.html.gz</a> (291533 bytes)<br>
-<a href="assets/optimized/reddit.html.zst">reddit.html.zst</a> (192423 bytes)<br>
+<a href="assets/optimized/reddit.html">reddit.html</a> (940603 bytes)<br>
+<a href="assets/optimized/reddit.html.br">reddit.html.br</a> (179555 bytes)<br>
+<a href="assets/optimized/reddit.html.gz">reddit.html.gz</a> (289633 bytes)<br>
+<a href="assets/optimized/reddit.html.zst">reddit.html.zst</a> (191232 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/reddit.html">reddit.html</a>
 <tr><td><a href="assets/source/rose.webp">rose.webp</a> (81978 bytes)<td>
 <a href="assets/optimized/rose.webp">rose.webp</a> (81978 bytes)<br>
@@ -130,10 +131,10 @@ When testing the live demo, you can check in the developer console the negotiati
 <a href="assets/optimized/terminated.gif.webp">terminated.gif.webp</a> (34418 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/terminated.gif">terminated.gif</a>
 <tr><td><a href="assets/source/wikipedia.html">wikipedia.html</a> (81182 bytes)<td>
-<a href="assets/optimized/wikipedia.html">wikipedia.html</a> (81182 bytes)<br>
-<a href="assets/optimized/wikipedia.html.br">wikipedia.html.br</a> (15326 bytes)<br>
-<a href="assets/optimized/wikipedia.html.gz">wikipedia.html.gz</a> (18541 bytes)<br>
-<a href="assets/optimized/wikipedia.html.zst">wikipedia.html.zst</a> (18084 bytes)<br>
+<a href="assets/optimized/wikipedia.html">wikipedia.html</a> (75187 bytes)<br>
+<a href="assets/optimized/wikipedia.html.br">wikipedia.html.br</a> (14662 bytes)<br>
+<a href="assets/optimized/wikipedia.html.gz">wikipedia.html.gz</a> (17615 bytes)<br>
+<a href="assets/optimized/wikipedia.html.zst">wikipedia.html.zst</a> (17249 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/wikipedia.html">wikipedia.html</a>
 </table>
 
@@ -152,7 +153,6 @@ PRs are welcome. Some ideas for what to add:
    - Add JPEG-XL `jxl` content-encoding variant
    - Add WebP2 variants for image assets
 - Other data formats
-   - Add HTML minification
    - Add CSS minification
    - Dictionary compression
       - Add zstd/gzip/brotli dictionary generation

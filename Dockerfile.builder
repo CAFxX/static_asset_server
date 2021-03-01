@@ -10,7 +10,7 @@ RUN echo 'APT::Acquire::Retries "3";' >/etc/apt/apt.conf.d/80-retries && \
                        golang \
                        jq npm
 
-RUN git clone --single-branch --branch v4.0.3 --depth=1 https://github.com/mozilla/mozjpeg.git && \
+RUN git clone --single-branch --branch v4.0.3 --depth 1 https://github.com/mozilla/mozjpeg.git && \
     cd mozjpeg && \
     mkdir build && \
     cd build && \
@@ -32,7 +32,7 @@ RUN git clone --depth 1 https://github.com/AOMediaCodec/libavif.git && \
     cd /usr/local/bin && \
     ln -s /libavif/build/avifenc
 
-RUN npm install -g svgo uglify-js
+RUN npm install -g svgo uglify-js html-minifier
 
 COPY cmd/alt_path /cmd/alt_path
 RUN (cd /cmd/alt_path && go get && go build -o /usr/local/bin/alt_path)
