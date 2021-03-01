@@ -8,7 +8,8 @@ RUN echo 'APT::Acquire::Retries "3";' >/etc/apt/apt.conf.d/80-retries && \
     apt-get install -y zopfli brotli zstd optipng webp imagemagick gif2apng gifsicle \
                        cmake autoconf automake libtool nasm ninja-build make pkg-config git libpng-dev libjpeg-dev \
                        golang \
-                       jq npm
+                       jq npm \
+                       x265 libx265-dev libde265-dev libaom-dev automake
 
 RUN git clone --single-branch --branch v4.0.3 --depth=1 https://github.com/mozilla/mozjpeg.git && \
     cd mozjpeg && \
@@ -31,6 +32,14 @@ RUN git clone --depth 1 https://github.com/AOMediaCodec/libavif.git && \
     ninja && \
     cd /usr/local/bin && \
     ln -s /libavif/build/avifenc
+
+RUN git clone --single-branch --branch v1.11.0 --depth=1 https://github.com/strukturag/libheif.git && \
+    cd libheif && \
+    ./autogen.sh && \
+    ./configure && \
+    make -j`getconf NPROCESSORS_ONLN` && \
+    cd /usr/local/bin && \
+    ln -s /libheif/examples/heif-enc
 
 RUN npm install -g svgo uglify-js
 
