@@ -156,6 +156,7 @@ PRs are welcome. Some ideas for what to add:
    - Add CSS minification
    - Dictionary compression
       - Add zstd/gzip/brotli dictionary generation
+      - Add specialized dictionary generation (e.g. different dictionaries for different mimetypes)
       - Add dictionary negotiation
       - Add dictionary serving
    - Add LZMA content-encoding variants
