@@ -146,11 +146,13 @@ PRs are welcome. Some ideas for what to add:
 - Image formats
    - Add WebP optimization
    - Add AVIF optimization
+   - Add all low efficiency variants for all formats, to improve compatibility (e.g. JPEG variant for AVIF files)
    - Add AVIF variant for WebP and GIF assets
    - Add HEIF (`image/heif`) variants for image assets
    - Add JPEG-XL (`image/jxl`) variants for image assets
    - Add JPEG-XL `jxl` content-encoding variant
    - Add WebP2 variants for image assets
+   - Add BGP variants for image assets
 - Other data formats
    - Add HTML minification
    - Add CSS minification
