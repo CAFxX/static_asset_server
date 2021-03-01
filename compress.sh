@@ -164,6 +164,13 @@ JS_FILES=$(
         -printf '%P\n' \
 )
 
+CSS_FILES=$(
+    find . -type f \
+        -iname '*.css' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 COMPRESSIBLE_FILES=$(
     find . -type f \
         -not -iname '*.gif' \
@@ -307,6 +314,15 @@ minify_js() { FILE=$1
 }
 
 foreach "$JS_FILES" minify_js
+
+## minify css files
+
+minify_css() { FILE=$1
+    cleancss -o "$FILE.cleancss" -- "$FILE" || rm -f "$FILE.cleancss"
+    mv -f "$FILE.cleancss" "$FILE"
+}
+
+foreach "$CSS_FILES" minify_css
 
 ## precompress uncompressed files
 
