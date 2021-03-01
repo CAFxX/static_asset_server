@@ -15,9 +15,9 @@ This table shows the which variants are created for each source image type.
 
 | ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | SVG |
 | --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | --- |
-| JPEG                  | ✅    |     |     | ✅    |      | ✅    | ⏳    |     |
+| JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    |     |
 | GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅⏳   | ⏳    |     |
-| PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ⏳    |     |
+| PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    |     |
 | WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅⏳   | ⏳    |     |
 | APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
 | AVIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
