@@ -15,9 +15,11 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
+    PNG_HEIF_CMD="heif-enc -q 45"
 
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
     JPG_AVIF_CMD="avifenc -s 0"
+    JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O3"
     GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
@@ -42,9 +44,11 @@ else
     PNG_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc"
+    PNG_HEIF_CMD="heif-enc -q 45"
 
     JPG_WEBP_CMD="cwebp -q 85"
     JPG_AVIF_CMD="avifenc"
+    JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O1"
     GIF_WEBP_CMD="gif2webp -m 0 -mixed -q 90"
@@ -225,6 +229,7 @@ foreach "$GIF_FILES" process_gif
 process_jpeg() { FILE=$1
     $JPG_WEBP_CMD "$FILE" -o "$FILE.webp"
     $JPG_AVIF_CMD "$FILE" "$FILE.avif"
+    $JPG_HEIF_CMD -o "$FILE.heif" "$FILE"
 
     QUALITY=$(identify -format '%[quality]' "$FILE")
     if (( QUALITY >= 88 )); then
@@ -236,6 +241,7 @@ process_jpeg() { FILE=$1
 
     validate "$FILE" "$FILE.webp" "image/webp" true
     validate "$FILE" "$FILE.avif" "image/avif" true
+    validate "$FILE" "$FILE.heif" "image/heif" true
 }
 
 foreach "$JPEG_FILES" process_jpeg
@@ -252,6 +258,9 @@ process_png() { FILE=$1
 
     $PNG_AVIF_CMD "$FILE" "$FILE.avif"
     validate "$FILE" "$FILE.avif" "image/avif" true
+
+    $PNG_HEIF_CMD -o "$FILE.heif" "$FILE"
+    validate "$FILE" "$FILE.heif" "image/heif" true
 
     OPAQUE=$(identify -format '%[opaque]' "$FILE")
     if [ "$OPAQUE" == "true" ]; then
