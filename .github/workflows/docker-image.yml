@@ -3,8 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ main ]
-# pull_request:
-#   branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
 
@@ -21,12 +21,15 @@ jobs:
     - name: Build the Docker image for the asset server with the example assets
       run: docker build --tag registry.heroku.com/cafxx-static-asset-server-demo/web --file Dockerfile .
     - name: Login to Heroku Container registry
+      if: ${{ github.ref == 'refs/heads/master' }}
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku container:login 
     - name: Push the Docker image
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: docker push registry.heroku.com/cafxx-static-asset-server-demo/web
     - name: Deploy server
+      if: ${{ github.ref == 'refs/heads/master' }}
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku container:release -a cafxx-static-asset-server-demo web
