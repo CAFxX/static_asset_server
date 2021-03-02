@@ -6,16 +6,35 @@ This repository contains a ahead-of-time static asset optimization pipeline that
 
 The optimization pipeline, whose responsibility is generating the optimized static assets as well as the index file, is implemented in the `compress.sh` script. This script relies on well-known utilities (e.g. brotli, zopfli, zstd, optipng, mozjpeg, cwebp, gifsicle, svgo, ...) to perform these tasks.
 
-Currently the following optimizations are performed:
+### Image asset optimizations
 
-- PNG image files are optimized with optipng/zopflipng, and alternate versions are created in AVIF, WebP and JPEG format (the last one only if the PNG file contains no transparent pixels)
-- JPEG image files are optimized with mozjpeg and their quality lowered to 85; alternate versions are created in AVIF and WebP format
-- GIF image files are optimized with gifsicle, and alternate versions are created in WebP, APNG, PNG (when the image contains a single frame), and JPEG (when the image contains a single frame and no transparency)
-- WebP image files with a single frame: variants are created in AVIF, PNG and JPEG (the last one only when the image contains no transparent pixels)
-- SVG image files are minified using svgo - and are then compressed as other files (see below)
-- JSON files are minified using jq - and are then compressed as other files (see below)
-- JS files are minified using UglifyJS - and are then compressed as other files (see below)
-- Other files are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
+This table shows the which variants are created for each source image type.
+
+- ✅ means that the variant is created for that source image type
+- ⏳ means that generation of this variant is TODO
+
+| ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | SVG |
+| --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | --- |
+| JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    |     |
+| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅⏳   | ⏳    |     |
+| PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    |     |
+| WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅⏳   | ⏳    |     |
+| APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
+| AVIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
+| HEIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
+| SVG                   |      |     |     |      |      |      |      | ✅   |
+
+Notes:
+
+- WebP → WebP is not ✅ because we don't perform any optimization, so the original file is used.
+- GIF/WebP → AVIF is ✅⏳ because only non-animated images are supported.
+
+### Other asset optimizations
+
+- JSON files are minified using jq
+- Javascript files are minified using UglifyJS
+
+Finally, all compressible files (including e.g. SVG, JSON, and Javascript) are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
 
 ## Asset server
 
@@ -146,11 +165,13 @@ PRs are welcome. Some ideas for what to add:
 - Image formats
    - Add WebP optimization
    - Add AVIF optimization
+   - Add all low efficiency variants for all formats, to improve compatibility (e.g. JPEG variant for AVIF files)
    - Add AVIF variant for WebP and GIF assets
    - Add HEIF (`image/heif`) variants for image assets
    - Add JPEG-XL (`image/jxl`) variants for image assets
    - Add JPEG-XL `jxl` content-encoding variant
    - Add WebP2 variants for image assets
+   - Add BGP variants for image assets
 - Other data formats
    - Add HTML minification
    - Add CSS minification
