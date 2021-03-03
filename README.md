@@ -77,7 +77,8 @@ When testing the live demo, you can check in the developer console the negotiati
 
 <table><thead><tr><th>Source<th>Optimized variants<th>Live demo<tbody>
 <tr><td><a href="assets/source/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (1479380 bytes)<td>
-<a href="assets/optimized/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (305538 bytes)<br>
+<a href="assets/optimized/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a> (305494 bytes)<br>
+<a href="assets/optimized/a-chance-of-northern-lights.jpg.heif">a-chance-of-northern-lights.jpg.heif</a> (148473 bytes)<br>
 <a href="assets/optimized/a-chance-of-northern-lights.jpg.webp">a-chance-of-northern-lights.jpg.webp</a> (266378 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/a-chance-of-northern-lights.jpg">a-chance-of-northern-lights.jpg</a>
 <tr><td><a href="assets/source/bear.webp">bear.webp</a> (132108 bytes)<td>
@@ -107,19 +108,21 @@ When testing the live demo, you can check in the developer console the negotiati
 <a href="assets/optimized/kiss.gif.webp">kiss.gif.webp</a> (197796 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/kiss.gif">kiss.gif</a>
 <tr><td><a href="assets/source/make-it-new.jpg">make-it-new.jpg</a> (1084975 bytes)<td>
-<a href="assets/optimized/make-it-new.jpg">make-it-new.jpg</a> (369470 bytes)<br>
+<a href="assets/optimized/make-it-new.jpg">make-it-new.jpg</a> (369427 bytes)<br>
 <a href="assets/optimized/make-it-new.jpg.avif">make-it-new.jpg.avif</a> (357416 bytes)<br>
+<a href="assets/optimized/make-it-new.jpg.heif">make-it-new.jpg.heif</a> (156788 bytes)<br>
 <a href="assets/optimized/make-it-new.jpg.webp">make-it-new.jpg.webp</a> (338696 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/make-it-new.jpg">make-it-new.jpg</a>
 <tr><td><a href="assets/source/pattern-bw.svg">pattern-bw.svg</a> (75079 bytes)<td>
-<a href="assets/optimized/pattern-bw.svg">pattern-bw.svg</a> (65595 bytes)<br>
-<a href="assets/optimized/pattern-bw.svg.br">pattern-bw.svg.br</a> (20344 bytes)<br>
-<a href="assets/optimized/pattern-bw.svg.gz">pattern-bw.svg.gz</a> (25070 bytes)<br>
-<a href="assets/optimized/pattern-bw.svg.zst">pattern-bw.svg.zst</a> (24257 bytes)<br>
+<a href="assets/optimized/pattern-bw.svg">pattern-bw.svg</a> (65586 bytes)<br>
+<a href="assets/optimized/pattern-bw.svg.br">pattern-bw.svg.br</a> (20391 bytes)<br>
+<a href="assets/optimized/pattern-bw.svg.gz">pattern-bw.svg.gz</a> (25009 bytes)<br>
+<a href="assets/optimized/pattern-bw.svg.zst">pattern-bw.svg.zst</a> (24241 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/pattern-bw.svg">pattern-bw.svg</a>
 <tr><td><a href="assets/source/pattern-color.png">pattern-color.png</a> (326860 bytes)<td>
 <a href="assets/optimized/pattern-color.png">pattern-color.png</a> (279412 bytes)<br>
 <a href="assets/optimized/pattern-color.png.avif">pattern-color.png.avif</a> (222083 bytes)<br>
+<a href="assets/optimized/pattern-color.png.heif">pattern-color.png.heif</a> (76696 bytes)<br>
 <a href="assets/optimized/pattern-color.png.webp">pattern-color.png.webp</a> (162706 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/pattern-color.png">pattern-color.png</a>
 <tr><td><a href="assets/source/reddit.html">reddit.html</a> (982765 bytes)<td>
@@ -135,6 +138,7 @@ When testing the live demo, you can check in the developer console the negotiati
 <tr><td><a href="assets/source/social.png">social.png</a> (93404 bytes)<td>
 <a href="assets/optimized/social.png">social.png</a> (68363 bytes)<br>
 <a href="assets/optimized/social.png.avif">social.png.avif</a> (36592 bytes)<br>
+<a href="assets/optimized/social.png.heif">social.png.heif</a> (31419 bytes)<br>
 <a href="assets/optimized/social.png.webp">social.png.webp</a> (41678 bytes)<br>
 <td><a href="https://cafxx-static-asset-server-demo.herokuapp.com/social.png">social.png</a>
 <tr><td><a href="assets/source/sound-wave.svg">sound-wave.svg</a> (114176 bytes)<td>

@@ -15,11 +15,11 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
-    PNG_HEIF_CMD="heif-enc -q 90"
+    PNG_HEIF_CMD="heif-enc -q 45"
 
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
     JPG_AVIF_CMD="avifenc -s 0"
-    JPG_HEIF_CMD="heif-enc -q 85"
+    JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O3"
     GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
@@ -44,11 +44,11 @@ else
     PNG_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc"
-    PNG_HEIF_CMD="heif-enc -q 90"
+    PNG_HEIF_CMD="heif-enc -q 45"
 
     JPG_WEBP_CMD="cwebp -q 85"
     JPG_AVIF_CMD="avifenc"
-    JPG_HEIF_CMD="heif-enc -q 85"
+    JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O1"
     GIF_WEBP_CMD="gif2webp -m 0 -mixed -q 90"
