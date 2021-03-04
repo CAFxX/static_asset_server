@@ -194,6 +194,7 @@ PRs are welcome. Some ideas for what to add:
    - Automatic generation of lower resoluation variants (e.g. 1x/1.5x from 2x or from CSS-like selectors like `max-width: 640px`)
    - Automatic generation of lower quality variants (e.g. q=65, q=85, and lossless)
    - Automatic generation of lower decompression overhead variants (e.g. enable decoding with limited amounts of memory, or slow CPU)
+   - Detect image type (e.g. graphics/drawing vs. photo) and source compression quality to decide which variants to generate (e.g. skip PNG for photos) and the variant compression parameters (e.g. quality, subsampling, filtering, ...)
 - Asset server
    - Optionally embed assets in the server binary (`go:embed`)
    - Provide an optional way to serve variants based on a "first contentful paint" criteria (important for image formats that support progressive decoding)
