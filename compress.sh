@@ -175,6 +175,7 @@ COMPRESSIBLE_FILES=$(
         -not -iname '*.jpg' \
         -not -iname '*.jpeg' \
         -not -iname '*.webp' \
+        -not -iname '*.heif' \
         -not -iname '*.gz' \
         -not -iname '*.bz2' \
         -not -iname '*.zst' \
