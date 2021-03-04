@@ -14,11 +14,11 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_OPTIPNG_CMD="optipng -o5"
     PNG_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
-    PNG_AVIF_CMD="avifenc -s 0"
-    PNG_HEIF_CMD="heif-enc -q 45"
+    PNG_AVIF_CMD="avifenc -s 0 --min 20 --max 22"
+    PNG_HEIF_CMD="heif-enc -q 45 -p chroma=444"
 
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
-    JPG_AVIF_CMD="avifenc -s 0"
+    JPG_AVIF_CMD="avifenc -s 0 --min 24 --max 26"
     JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O3"
@@ -29,7 +29,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
 
-    WEBP_AVIF_CMD="avifenc -s 0"
+    WEBP_AVIF_CMD="avifenc -s 0 --min 24 --max 26"
     WEBP_OPTIPNG_CMD="optipng -o5"
     WEBP_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     
@@ -43,11 +43,11 @@ else
     PNG_OPTIPNG_CMD="optipng -o0"
     PNG_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
-    PNG_AVIF_CMD="avifenc"
-    PNG_HEIF_CMD="heif-enc -q 45"
+    PNG_AVIF_CMD="avifenc --min 20 --max 22"
+    PNG_HEIF_CMD="heif-enc -q 45 -p chroma=444"
 
     JPG_WEBP_CMD="cwebp -q 85"
-    JPG_AVIF_CMD="avifenc"
+    JPG_AVIF_CMD="avifenc --min 24 --max 26"
     JPG_HEIF_CMD="heif-enc -q 40"
 
     GIF_CMD="gifsicle -O1"
@@ -58,7 +58,7 @@ else
     GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
     
-    WEBP_AVIF_CMD="avifenc"
+    WEBP_AVIF_CMD="avifenc --min 24 --max 26"
     WEBP_OPTIPNG_CMD="optipng -o0"
     WEBP_ZOPFLIPNG_CMD="zopflipng --lossy_transparent --lossy_8bit"
     
