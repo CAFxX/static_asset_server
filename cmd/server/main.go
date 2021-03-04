@@ -172,9 +172,24 @@ func (wr *responseRecorder) Write(b []byte) (int, error) {
 }
 
 func negotiateAccept(header string, acceptables ...string) string {
-	h := accept.Parse(header)
+	parsedHeader := accept.Parse(header)
+	ua := parsedHeader[:0]
+	for _, acc := range parsedHeader {
+		if acc.Type == "*" || acc.Subtype == "*" {
+			// Browsers sends `image/*` or `*/*` in Accept, even though it's a lie.
+			// It makes sense to not consider for content-type negotiation
+			// content types that are not *explicitly* listed as acceptable,
+			// even though a strict interpretation of RFC 7231 would require
+			// to consider the wildcards as well.
+			// https://tools.ietf.org/html/rfc7231#section-5.3.2
+			// TODO: Use a browser capability database to know which types are
+			// actually accepted.
+			continue
+		}
+		ua = append(ua, acc) // filter in-place
+	}
 	for _, acceptable := range acceptables {
-		if h.Accepts(acceptable) {
+		if ua.Accepts(acceptable) {
 			return acceptable
 		}
 	}

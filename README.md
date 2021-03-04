@@ -203,3 +203,4 @@ PRs are welcome. Some ideas for what to add:
    - Decide whether to add [`Content-Location`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Location) support
    - Add support for [client hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#client_hints) (e.g. `Save-Data`, `Device-Memory`, `Width`, ...)
    - Decide whether to migrate to https://github.com/kevinpollet/nego
+   - Use the [caniuse.com database](https://raw.githubusercontent.com/Fyrd/caniuse/main/data.json) to augment content-type support (e.g. when the UA sends `*/*` or `image/*`)
