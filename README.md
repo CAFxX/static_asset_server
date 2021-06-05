@@ -13,16 +13,18 @@ This table shows the which variants are created for each source image type.
 - ✅ means that the variant is created for that source image type
 - ⏳ means that generation of this variant is TODO
 
-| ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | SVG |
-| --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | --- |
-| JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    |     |
-| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅⏳   | ⏳    |     |
-| PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    |     |
-| WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅⏳   | ⏳    |     |
-| APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
-| AVIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
-| HEIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |     |
-| SVG                   |      |     |     |      |      |      |      | ✅   |
+| ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | JPEG-XL | SVG |
+| --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | ------- | --- |
+| JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    | ✅       |     |
+| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅⏳   | ⏳    |         |     |
+| PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    | ⏳       |     |
+| WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅⏳   | ⏳    | ⏳       |     |
+| APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |         |     |
+| AVIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |
+| HEIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |
+| JPEG-XL               | ⏳    |     |     | ⏳    |      | ⏳    | ⏳    | ⏳       |     |
+| SVG                   |      |     |     |      |      |      |      |         | ✅   |
+
 
 Notes:
 

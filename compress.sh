@@ -16,10 +16,12 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
     PNG_HEIF_CMD="heif-enc -q 45"
+    PNG_JXL_CMD="cjxl -d 1"
 
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
     JPG_AVIF_CMD="avifenc -s 0"
     JPG_HEIF_CMD="heif-enc -q 40"
+    JPG_JXL_CMD="cjxl -q 85"
 
     GIF_CMD="gifsicle -O3"
     GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
@@ -32,6 +34,7 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     WEBP_AVIF_CMD="avifenc -s 0"
     WEBP_OPTIPNG_CMD="optipng -o5"
     WEBP_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
+    WEBP_JXL_CMD="cjxl -d 1"
     
     SVG_CMD="svgo --multipass"
 else
@@ -45,10 +48,12 @@ else
     PNG_WEBP_CMD="cwebp -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc"
     PNG_HEIF_CMD="heif-enc -q 45"
+    PNG_JXL_CMD="cjxl -d 1"
 
     JPG_WEBP_CMD="cwebp -q 85"
     JPG_AVIF_CMD="avifenc"
     JPG_HEIF_CMD="heif-enc -q 40"
+    JPG_JXL_CMD="cjxl -q 85"
 
     GIF_CMD="gifsicle -O1"
     GIF_WEBP_CMD="gif2webp -m 0 -mixed -q 90"
@@ -61,6 +66,7 @@ else
     WEBP_AVIF_CMD="avifenc"
     WEBP_OPTIPNG_CMD="optipng -o0"
     WEBP_ZOPFLIPNG_CMD="zopflipng --lossy_transparent --lossy_8bit"
+    WEBP_JXL_CMD="cjxl -d 1"
     
     SVG_CMD="svgo"
 fi
@@ -231,6 +237,7 @@ process_jpeg() { FILE=$1
     $JPG_WEBP_CMD "$FILE" -o "$FILE.webp"
     $JPG_AVIF_CMD "$FILE" "$FILE.avif"
     $JPG_HEIF_CMD -o "$FILE.heif" "$FILE"
+    $JPG_JXL_CMD "$FILE" "$FILE.jxl"
 
     QUALITY=$(identify -format '%[quality]' "$FILE")
     if (( QUALITY >= 88 )); then
@@ -243,6 +250,7 @@ process_jpeg() { FILE=$1
     validate "$FILE" "$FILE.webp" "image/webp" true
     validate "$FILE" "$FILE.avif" "image/avif" true
     validate "$FILE" "$FILE.heif" "image/heif" true
+    validate "$FILE" "$FILE.jxl" "image/jxl" true
 }
 
 foreach "$JPEG_FILES" process_jpeg
