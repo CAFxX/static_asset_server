@@ -271,6 +271,9 @@ process_png() { FILE=$1
     $PNG_HEIF_CMD -o "$FILE.heif" "$FILE"
     validate "$FILE" "$FILE.heif" "image/heif" true
 
+    $PNG_JXL_CMD "$FILE" "$FILE.jxl"
+    validate "$FILE" "$FILE.jxl" "image/jxl" true
+
     OPAQUE=$(identify -format '%[opaque]' "$FILE")
     if [ "$OPAQUE" == "true" ]; then
         convert "$FILE" pnm:- | cjpeg -quality 90 -optimize -progressive -sample 1x1 -outfile "$FILE.jpg"
@@ -297,6 +300,9 @@ process_webp() { FILE=$1
         validate "$FILE" "$FILE.avif" "image/avif" true
 
         validate "$FILE" "$FILE.png" "image/png" true
+
+        $WEBP_JXL_CMD "$FILE" "$FILE.jxl"
+        validate "$FILE" "$FILE.jxl" "image/jxl" true
 
         OPAQUE=$(identify -format '%[opaque]' "$FILE")
         if [ "$OPAQUE" == "true" ]; then
