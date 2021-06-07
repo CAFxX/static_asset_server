@@ -17,8 +17,8 @@ Every source image is converted to variants of each image, each in a different f
 | ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | JPEG-XL | SVG |
 | --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | ------- | --- |
 | JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    | ✅       |     |
-| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅   | ⏳    | ⏳       |     |
-| GIF (animated)        |      | ✅   |     | ✅    | ✅    | ⏳   | ⏳    | ⏳       |     |
+| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅   | ⏳    | ✅       |     |
+| GIF (animated)        |      | ✅   |     | ✅    | ✅    | ⏳   | ⏳    | ✅       |     |
 | PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    | ✅       |     |
 | WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅    | ⏳    | ✅       |     |
 | WebP (animated)       |      | ⏳   |     | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |

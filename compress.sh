@@ -16,12 +16,12 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     PNG_WEBP_CMD="cwebp -m 6 -pre 4 -sharp_yuv -q 90"
     PNG_AVIF_CMD="avifenc -s 0"
     PNG_HEIF_CMD="heif-enc -q 45"
-    PNG_JXL_CMD="cjxl -d 1"
+    PNG_JXL_CMD="cjxl -d 1 -s 9"
 
     JPG_WEBP_CMD="cwebp -m 6 -q 85"
     JPG_AVIF_CMD="avifenc -s 0"
     JPG_HEIF_CMD="heif-enc -q 40"
-    JPG_JXL_CMD="cjxl -q 85"
+    JPG_JXL_CMD="cjxl -q 85 -s 9"
 
     GIF_CMD="gifsicle -O3"
     GIF_WEBP_CMD="gif2webp -m 6 -mixed -q 90"
@@ -30,11 +30,12 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     GIF_OPTIPNG_CMD="optipng -o5"
     GIF_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+    GIF_JXL_CMD="cjxl -d 1 -s 9"
 
     WEBP_AVIF_CMD="avifenc -s 0"
     WEBP_OPTIPNG_CMD="optipng -o5"
     WEBP_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
-    WEBP_JXL_CMD="cjxl -d 1"
+    WEBP_JXL_CMD="cjxl -d 1 -s 9"
     
     SVG_CMD="svgo --multipass"
 else
@@ -62,6 +63,7 @@ else
     GIF_OPTIPNG_CMD="optipng -o0"
     GIF_ZOPFLIPNG_CMD="zopflipng -q --lossy_transparent --lossy_8bit"
     GIF_JPEG_CMD="cjpeg -quality 90 -optimize -progressive -sample 1x1"
+    GIF_JXL_CMD="cjxl -d 1"
     
     WEBP_AVIF_CMD="avifenc"
     WEBP_OPTIPNG_CMD="optipng -o0"
@@ -89,6 +91,9 @@ job_limit () { NJOBS=${1:-$(nproc)}
 }
 
 validate() { FILE=$1; FILE_C=$2; TYPE=$3; IMAGE=$4
+    if [[ ! -f "$FILE_C" ]]; then
+        return
+    fi
     local FILE_SZ=$(wc -c <"$FILE")
     local FILE_C_SZ=$(wc -c <"$FILE_C")
     local ABSDIFF=$((FILE_SZ - FILE_C_SZ))
@@ -213,6 +218,9 @@ process_gif() { FILE=$1
 
     $GIF_APNG_CMD "$FILE" "$FILE.apng"
     validate "$FILE" "$FILE.apng" "image/apng" true
+
+    $GIF_JXL_CMD "$FILE" "$FILE.jxl"
+    validate "$FILE" "$FILE.jxl" "image/jxl" true
 
     FRAMES=$(identify -format '%n ' "$FILE" | cut -f1 -d' ')
     if [ "$FRAMES" == "1" ]; then

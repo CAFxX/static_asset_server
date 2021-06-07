@@ -11,7 +11,7 @@ RUN echo 'APT::Acquire::Retries "3";' >/etc/apt/apt.conf.d/80-retries && \
                        golang \
                        jq npm \
                        x265 libx265-dev libde265-dev libaom-dev automake \
-                       clang
+                       clang libwebp-dev libbrotli-dev
 
 RUN git clone --single-branch --branch v4.0.3 --depth=1 https://github.com/mozilla/mozjpeg.git && \
     cd mozjpeg && \
