@@ -26,6 +26,8 @@ jobs:
         push: true
         tags: cafxx/static_asset_server:latest
         file: Dockerfile.builder
+        cache-from: type=registry,ref=cafxx/static_asset_server:latest
+        cache-to: type=inline
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
   build-demo:
