@@ -8,18 +8,21 @@ The optimization pipeline, whose responsibility is generating the optimized stat
 
 ### Image asset optimizations
 
-This table shows the which variants are created for each source image type.
+Every source image is converted to variants of each image, each in a different format. Currently variants are only generated if the resulting file is smaller than that of the original image. This table shows the which variants are created for each source image type.
 
-- ✅ means that the variant is created for that source image type
+- ✅ means that the variant is created for that source image type (only if the resulting file is smaller than the source file)
+- ✔️ means that the variant is created for that source image type (regardless if the resulting file is smaller than the source file)
 - ⏳ means that generation of this variant is TODO
 
 | ↓ Source / Variants → | JPEG | GIF | PNG | WebP | APNG | AVIF | HEIF | JPEG-XL | SVG |
 | --------------------- | ---- | --- | --- | ---- | ---- | ---- | ---- | ------- | --- |
 | JPEG                  | ✅    |     |     | ✅    |      | ✅    | ✅    | ✅       |     |
-| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅⏳   | ⏳    |         |     |
+| GIF                   | ✅    | ✅   | ✅   | ✅    | ✅    | ✅   | ⏳    | ⏳       |     |
+| GIF (animated)        |      | ✅   |     | ✅    | ✅    | ⏳   | ⏳    | ⏳       |     |
 | PNG                   | ✅    | ⏳   | ✅   | ✅    | ⏳    | ✅    | ✅    | ✅       |     |
-| WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅⏳   | ⏳    | ✅⏳      |     |
-| APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    |         |     |
+| WebP                  | ✅    | ⏳   | ✅   | ⏳    | ⏳    | ✅    | ⏳    | ✅       |     |
+| WebP (animated)       |      | ⏳   |     | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |
+| APNG                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    | ⏳      |     |
 | AVIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |
 | HEIF                  | ⏳    | ⏳   | ⏳   | ⏳    | ⏳    | ⏳    | ⏳    | ⏳       |     |
 | JPEG-XL               | ⏳    |     |     | ⏳    |      | ⏳    | ⏳    | ⏳       |     |
@@ -29,14 +32,13 @@ This table shows the which variants are created for each source image type.
 Notes:
 
 - WebP → WebP is not ✅ because we don't perform any optimization, so the original file is used.
-- GIF/WebP → AVIF and WebP → JPEG-XL is ✅⏳ because only non-animated images are supported.
 
 ### Other asset optimizations
 
 - JSON files are minified using jq
 - Javascript files are minified using UglifyJS
 
-Finally, all compressible files (including e.g. SVG, JSON, and Javascript) are statically compressed with zopfli (gzip), brotli and zstandard (zstd)
+Finally, all compressible files (including e.g. SVG, JSON, Javascript and HTML) are statically compressed with zopfli (gzip), brotli and zstandard (zstd) at maximum compression (something that would be normally impractical if done on-the-fly).
 
 ## Asset server
 
