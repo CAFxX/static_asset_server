@@ -1,4 +1,4 @@
-FROM static_asset_builder AS build
+FROM cafxx/static_asset_builder:latest AS build
 WORKDIR /
 ARG compression=HIGH
 
