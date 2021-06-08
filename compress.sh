@@ -36,6 +36,8 @@ if [ "$COMPRESSION" == "HIGH" ]; then
     WEBP_OPTIPNG_CMD="optipng -o5"
     WEBP_ZOPFLIPNG_CMD="zopflipng --iterations=50 --filters=0me --lossy_transparent --lossy_8bit"
     WEBP_JXL_CMD="cjxl -d 1 -s 9"
+
+    APNG_WEBP_CMD="convert -quality 90"
     
     SVG_CMD="svgo --multipass"
 else
@@ -69,6 +71,8 @@ else
     WEBP_OPTIPNG_CMD="optipng -o0"
     WEBP_ZOPFLIPNG_CMD="zopflipng --lossy_transparent --lossy_8bit"
     WEBP_JXL_CMD="cjxl -d 1"
+
+    APNG_WEBP_CMD="convert -quality 90"
     
     SVG_CMD="svgo"
 fi
@@ -158,6 +162,13 @@ WEBP_FILES=$(
         -printf '%P\n' \
 )
 
+APNG_FILES=$(
+    find . -type f \
+        -iname '*.apng' \
+        -size +1 \
+        -printf '%P\n' \
+)
+
 SVG_FILES=$(
     find . -type f \
         -iname '*.svg' \
@@ -187,6 +198,8 @@ COMPRESSIBLE_FILES=$(
         -not -iname '*.jpeg' \
         -not -iname '*.webp' \
         -not -iname '*.heif' \
+        -not -iname '*.avif' \
+        -not -iname '*.jxl' \
         -not -iname '*.gz' \
         -not -iname '*.bz2' \
         -not -iname '*.zst' \
@@ -213,8 +226,8 @@ process_gif() { FILE=$1
     $GIF_WEBP_CMD "$FILE" -o "$FILE.webp"
     validate "$FILE" "$FILE.webp" "image/webp" true
 
-    #$GIF_AVIF_CMD "$FILE" "$FILE.avif"
-    #validate "$FILE" "$FILE.avif" "image/avif" true
+    $GIF_AVIF_CMD "$FILE" "$FILE.avif"
+    validate "$FILE" "$FILE.avif" "image/avif" true
 
     $GIF_APNG_CMD "$FILE" "$FILE.apng"
     validate "$FILE" "$FILE.apng" "image/apng" true
@@ -318,6 +331,15 @@ process_webp() { FILE=$1
             validate "$FILE" "$FILE.jpg" "image/jpeg" true
         fi
     fi
+}
+
+foreach "$WEBP_FILES" process_webp
+
+## optimize apng images
+
+process_webp() { FILE=$1
+    $APNG_WEBP_CMD "apng:$FILE" "$FILE.webp"
+    validate "$FILE" "$FILE.webp" "image/webp" true
 }
 
 foreach "$WEBP_FILES" process_webp
